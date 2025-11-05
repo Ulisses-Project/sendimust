@@ -31,18 +31,30 @@ export const LobeTab = () => {
       </Card>
 
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
-        <CustomSelect
-          title="Ecogenicidad global"
-          defaultValue="homogeneous"
-          options={global_echogenicity}
-          onChange={(value) => console.log(value)}
-        />
-        <CustomSelect
-          title="Vascularización global"
-          defaultValue="not-evaluated"
-          options={global_vascularization}
-          onChange={(value) => console.log(value)}
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>{"Ecogenicidad global"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CustomSelect
+              defaultValue="homogeneous"
+              options={global_echogenicity}
+              onChange={(value) => console.log(value)}
+            />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>{"Vascularización global"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CustomSelect
+              defaultValue="not-evaluated"
+              options={global_vascularization}
+              onChange={(value) => console.log(value)}
+            />
+          </CardContent>
+        </Card>
       </div>
 
       {/* Observaciones */}
@@ -57,9 +69,8 @@ export const LobeTab = () => {
           />
         </CardContent>
       </Card>
-      
-      {/* 
 
+      {/*  //! Preguntar a Pablo si queremos mantenerlo
 
       <Card data-tour="lymph-nodes">
         <CardHeader>
