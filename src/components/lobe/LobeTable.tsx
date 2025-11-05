@@ -21,7 +21,6 @@ import {
   SortableContent,
   SortableItem,
   SortableItemHandle,
-  SortableOverlay,
 } from "@/components/ui/sortable";
 import { useDimensions } from "@/context/DimensionsContext";
 
@@ -94,18 +93,6 @@ export const LobeTable = () => {
                 </>
               </SortableContent>
             </TableRow>
-            <SortableOverlay>
-              {({ value }) => {
-                const dimension = dimensions.find((d) => d.id === value);
-                return (
-                  <div className="flex h-12 items-center justify-center rounded-md border bg-background px-4 shadow-lg">
-                    <span className="font-medium text-sm">
-                      {dimension?.label}
-                    </span>
-                  </div>
-                );
-              }}
-            </SortableOverlay>
           </TableHeader>
 
           <TableBody>

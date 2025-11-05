@@ -10,7 +10,7 @@ import {
 
 export const CustomFooter = () => {
   return (
-    <footer className="border-t bg-card p-4">
+    <footer className="border-t bg-card px-4 py-6">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
         <div className="flex gap-2">
           <Button variant="outline" disabled>

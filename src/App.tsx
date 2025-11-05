@@ -12,29 +12,31 @@ function App() {
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <CustomHeader />
-        <div className="flex-1 overflow-auto p-6">
-          <div className="mx-auto max-w-7xl">
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="space-y-6"
-              data-tour="tabs"
-            >
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="lobulos">
-                  Información sobre lóbulos tiroideos
-                </TabsTrigger>
-                <TabsTrigger value="ganglios">
-                  Ganglios linfáticos cervicales reseñables
-                </TabsTrigger>
-              </TabsList>
-              <LobeTab />
-              <LymphNodeTab />
-            </Tabs>
+        <div className="min-h-screen flex flex-col">
+          <CustomHeader />
+          <div className="flex-1 overflow-auto p-6">
+            <div className="mx-auto max-w-7xl">
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="space-y-6"
+                data-tour="tabs"
+              >
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="lobulos">
+                    Información sobre lóbulos tiroideos
+                  </TabsTrigger>
+                  <TabsTrigger value="ganglios">
+                    Ganglios linfáticos cervicales reseñables
+                  </TabsTrigger>
+                </TabsList>
+                <LobeTab />
+                <LymphNodeTab />
+              </Tabs>
+            </div>
           </div>
+          <CustomFooter />
         </div>
-        <CustomFooter />
       </ThemeProvider>
     </>
   );

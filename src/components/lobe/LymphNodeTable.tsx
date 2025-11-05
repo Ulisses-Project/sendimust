@@ -11,15 +11,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { GripVertical, Plus, RotateCcw, Trash2 } from "lucide-react";
-import { useLymphNodes } from "@/hooks/lobe/UseLymphNode";
+
 import { CustomSelect, type Option } from "../common/CustomSelect";
 import {
   Sortable,
   SortableContent,
   SortableItem,
   SortableItemHandle,
-  SortableOverlay,
 } from "@/components/ui/sortable";
+import { useLymphNodes } from "@/hooks/lobe/useLymphNode";
 
 const ultrasoundAppearances: Option[] = [
   { value: "normal", label: "Normal" },
@@ -85,18 +85,6 @@ export const LymphNodeTable = () => {
                 </TableHead>
                 <TableHead className="text-center w-20">Acciones</TableHead>
               </TableRow>
-              <SortableOverlay>
-                {({ value }) => {
-                  const dimension = dimensions.find((d) => d.id === value);
-                  return (
-                    <div className="flex h-12 items-center justify-center rounded-md border bg-background px-4 shadow-lg">
-                      <span className="font-medium text-sm">
-                        {dimension?.label}
-                      </span>
-                    </div>
-                  );
-                }}
-              </SortableOverlay>
             </TableHeader>
 
             <TableBody>
