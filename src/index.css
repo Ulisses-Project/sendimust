@@ -233,3 +233,12 @@
 .animate-spin-once {
   animation: spin-once 0.4s ease-in-out;
 }
+
+body {
+  font-family: "Geist Variable", sans-serif;
+}
+
+code,
+pre {
+  font-family: "Geist Mono", monospace;
+}

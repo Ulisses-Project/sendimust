@@ -2,16 +2,18 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+interface CardProps extends React.ComponentProps<"div"> {
+  withoutBorder?: boolean;
+}
+
+function Card({ className, withoutBorder = false, ...props }: CardProps) {
+  const cardStyle = cn(
+    "bg-card  text-card-foreground flex flex-col gap-6 rounded-xl py-6 ",
+    withoutBorder == false && "border border-border shadow-sm"
+  );
+
   return (
-    <div
-      data-slot="card"
-      className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border border-border py-6 shadow-sm",
-        className
-      )}
-      {...props}
-    />
+    <div data-slot="card" className={cn(cardStyle, className)} {...props} />
   );
 }
 

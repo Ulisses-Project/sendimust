@@ -17,58 +17,66 @@ const global_vascularization: Option[] = [
 
 export const LobeGrid = () => {
   return (
-    <div className="space-y-6">
-      <Card data-tour="lobulos-table">
-        <CardHeader>
-          <div className="flex items-center justify-between">
+    <Card data-tour="lobulos-table">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-1 bg-primary rounded-full" />
+          <h3 className="text-lg font-semibold text-primary">
+            Lóbulos tiroideos
+          </h3>
+        </div>
+      </CardHeader>
+
+      <CardContent>
+        <Card withoutBorder>
+          <CardHeader>
             <CardTitle>Medidas de lóbulos tiroideos</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <LobeTable />
-        </CardContent>
-      </Card>
-
-      {/* //!Refactorizar a un componente Ecogenicidad y vascularización global */}
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>{"Ecogenicidad global"}</CardTitle>
           </CardHeader>
           <CardContent>
-            <CustomSelect
-              defaultValue="homogeneous"
-              options={global_echogenicity}
-              onChange={(value) => console.log(value)}
+            <LobeTable />
+          </CardContent>
+        </Card>
+
+        {/* //!Refactorizar a un componente Ecogenicidad y vascularización global */}
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
+          <Card withoutBorder>
+            <CardHeader>
+              <CardTitle>{"Ecogenicidad global"}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CustomSelect
+                defaultValue="homogeneous"
+                options={global_echogenicity}
+                onChange={(value) => console.log(value)}
+              />
+            </CardContent>
+          </Card>
+          <Card withoutBorder>
+            <CardHeader>
+              <CardTitle>{"Vascularización global"}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CustomSelect
+                defaultValue="not-evaluated"
+                options={global_vascularization}
+                onChange={(value) => console.log(value)}
+              />
+            </CardContent>
+          </Card>
+        </div>
+        {/* Observaciones */}
+        <Card withoutBorder>
+          <CardHeader>
+            <CardTitle>Observaciones</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Textarea
+              placeholder="Ingrese observaciones adicionales..."
+              className="min-h-32"
             />
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>{"Vascularización global"}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CustomSelect
-              defaultValue="not-evaluated"
-              options={global_vascularization}
-              onChange={(value) => console.log(value)}
-            />
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Observaciones */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Observaciones</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            placeholder="Ingrese observaciones adicionales..."
-            className="min-h-32"
-          />
-        </CardContent>
-      </Card>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
