@@ -34,7 +34,7 @@ export const LobeTable = () => {
   const { dimensions, setDimensions } = useDimensions();
 
   return (
-    <div className="rounded-md border">
+    <div>
       <Sortable
         value={dimensions}
         onValueChange={setDimensions}
@@ -52,7 +52,7 @@ export const LobeTable = () => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Info className="h-4 w-4 cursor-help" />
+                        <Info className="h-4 w-4 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p className="text-sm w-[300px] text-center">
@@ -80,12 +80,14 @@ export const LobeTable = () => {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-6 w-6 cursor-grab active:cursor-grabbing hover:bg-transparent"
+                              className="h-6 w-20 hover:cursor-grab active:cursor-grabbing hover:bg-transparent"
                             >
                               <GripVertical className="h-4 w-4 text-muted-foreground" />
+                              <span className="font-bold">
+                                {dimension.label}
+                              </span>
                             </Button>
                           </SortableItemHandle>
-                          <span>{dimension.label}</span>
                         </div>
                       </TableHead>
                     </SortableItem>

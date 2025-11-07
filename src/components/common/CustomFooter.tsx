@@ -25,7 +25,7 @@ export const CustomFooter = () => {
 
         <div className="flex gap-2">
           <Button variant="default" data-tour="generate-report">
-            <FileText className="mr-2 h-4 w-4" />
+            <FileText className="mr-2 h-4 w-4 " />
             Generar Informe
           </Button>
           <Button variant="default">
