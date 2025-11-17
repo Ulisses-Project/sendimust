@@ -20,7 +20,7 @@ export const CustomSwitchCard = ({
     <Card>
       <CardHeader className="flex items-center gap-x-4">
         <CardTitle>
-          <div className="flex items-center gap-2 pb-2">
+          <div className="flex items-center gap-2">
             <div className="h-8 w-1 bg-primary rounded-full" />
             <h3 className="text-lg font-semibold text-primary">{title}</h3>
           </div>
@@ -31,7 +31,7 @@ export const CustomSwitchCard = ({
           onCheckedChange={handleCheckedChange}
         />
       </CardHeader>
-      {checked && <CardContent className="space-y-6">{children}</CardContent>}
+      {checked && <CardContent>{children}</CardContent>}
     </Card>
   );
 };

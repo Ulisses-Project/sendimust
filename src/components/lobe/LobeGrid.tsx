@@ -3,16 +3,34 @@ import { LobeTable } from "@/components/lobe/LobeTable";
 import { CustomSelect, type Option } from "../common/CustomSelect";
 import { Textarea } from "../ui/textarea";
 
-const global_echogenicity: Option[] = [
+const globalEchogenicity: Option[] = [
   { value: "homogeneous", label: "Homogénea" },
   { value: "heterogeneous", label: "Heterogénea" },
 ];
 
-const global_vascularization: Option[] = [
+const globalVascularization: Option[] = [
   { value: "not-evaluated", label: "No evaluada" },
   { value: "normal", label: "Normal" },
   { value: "decreased", label: "Disminuida" },
   { value: "increased", label: "Aumentada" },
+];
+
+const lobeGridOptions = [
+  {
+    title: "Ecogenicidad global",
+    defaultValue: "homogeneous",
+    options: globalEchogenicity,
+    //! Descomentar cuando creemos funcionalidad
+    // onChange: (value) => console.log(value)
+  },
+
+  {
+    title: "Vascularización global",
+    defaultValue: "not-evaluated",
+    options: globalVascularization,
+    //! Descomentar cuando creemos funcionalidad
+    // onChange: (value) => console.log(value)
+  },
 ];
 
 export const LobeGrid = () => {
@@ -28,7 +46,7 @@ export const LobeGrid = () => {
       </CardHeader>
 
       <CardContent>
-        <Card withoutBorder>
+        <Card withoutBorder className="py-0">
           <CardHeader>
             <CardTitle>Medidas de lóbulos tiroideos</CardTitle>
           </CardHeader>
@@ -37,35 +55,34 @@ export const LobeGrid = () => {
           </CardContent>
         </Card>
 
-        {/* //!Refactorizar a un componente Ecogenicidad y vascularización global */}
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
-          <Card withoutBorder>
-            <CardHeader>
-              <CardTitle>{"Ecogenicidad global"}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CustomSelect
-                defaultValue="homogeneous"
-                options={global_echogenicity}
-                onChange={(value) => console.log(value)}
-              />
-            </CardContent>
-          </Card>
-          <Card withoutBorder>
-            <CardHeader>
-              <CardTitle>{"Vascularización global"}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CustomSelect
-                defaultValue="not-evaluated"
-                options={global_vascularization}
-                onChange={(value) => console.log(value)}
-              />
-            </CardContent>
-          </Card>
+        {/* Ecogenicidad y vascularización */}
+        <div className="grid grid-cols-1 sm:grid-cols-2">
+          {lobeGridOptions.map(
+            ({
+              title,
+              defaultValue,
+              options,
+              //! Descomentar cuando creemos funcionalidad
+              // onChange
+            }) => (
+              <Card withoutBorder className="py-10">
+                <CardHeader>
+                  <CardTitle>{title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CustomSelect
+                    defaultValue={defaultValue}
+                    options={options}
+                    onChange={(value) => console.log(value)}
+                  />
+                </CardContent>
+              </Card>
+            )
+          )}
         </div>
+
         {/* Observaciones */}
-        <Card withoutBorder>
+        <Card withoutBorder className="py-0">
           <CardHeader>
             <CardTitle>Observaciones</CardTitle>
           </CardHeader>
