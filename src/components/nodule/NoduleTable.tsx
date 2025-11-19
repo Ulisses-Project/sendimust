@@ -9,42 +9,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { use, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { NoduleContext } from "@/context/NoduleContext";
 import type { Lobe } from "@/types/nodule/nodule.type";
-import { CustomSelect } from "../common/CustomSelect";
+import { CustomSelect } from "@/components/common/CustomSelect";
 import { LanguageContext } from "@/context/LanguageContext";
 import { noduleLanguageMapper } from "@/lib/utils";
-import { CustomCheckboxGrid } from "../common/CustomCheckboxGrid";
-
-const calcificationOptions = [
-  { value: "microcalcificaciones", label: "Microcalcificaciones" },
-  {
-    value: "macrocalcificaciones-intranodulares",
-    label: "Macrocalcificaciones intranodulares",
-  },
-  {
-    value: "macrocalcificaciones-perifericas-finas-regulares",
-    label: "Macrocalcificaciones periféricas finas y regulares",
-  },
-  {
-    value: "macrocalcificaciones-perifericas-irregulares",
-    label: "Macrocalcificaciones periféricas irregulares",
-  },
-  {
-    value: "macrocalcificaciones-perifericas-interrumpidas",
-    label: "Macrocalcificaciones periféricas interrumpidas",
-  },
-];
+import { CustomCheckboxGrid } from "@/components/common/CustomCheckboxGrid";
+import { CustomInput } from "@/components/common/CustomInput";
+import { useDimensions } from "@/context/DimensionsContext";
+import {
+  Sortable,
+  SortableContent,
+  SortableItem,
+} from "@/components/ui/sortable";
 
 export const NoduleTable = () => {
   const { getDict } = use(LanguageContext);
 
-  const { nodules, updateLobe } = use(NoduleContext);
+  const { dimensions, setDimensions } = useDimensions();
+
+  const { nodules, updateLobe, updateDimension } = use(NoduleContext);
 
   const [location, setLocation] = useState<string[]>([]);
 
@@ -57,6 +45,7 @@ export const NoduleTable = () => {
     const updated = current.includes(option)
       ? current.filter((l) => l !== option)
       : [...current, option];
+
     setLocation(updated);
   };
 
@@ -73,6 +62,8 @@ export const NoduleTable = () => {
     const updated = current.includes(option)
       ? current.filter((l) => l !== option)
       : [...current, option];
+
+    console.log({ updated });
     setCalcification(updated);
   };
 
@@ -94,7 +85,7 @@ export const NoduleTable = () => {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2" data-tour="nodule-lobulo">
-                    <Label htmlFor="lobulo">Lóbulo</Label>
+                    <Label>Lóbulo</Label>
                     <CustomSelect
                       options={noduleLanguageMapper(getDict("nodule.lobe"))}
                       defaultValue={nodules[0].lobe}
@@ -103,7 +94,7 @@ export const NoduleTable = () => {
                   </div>
 
                   <div className="space-y-2" data-tour="nodule-composicion">
-                    <Label htmlFor="composicion">Composición</Label>
+                    <Label>Composición</Label>
                     <CustomSelect
                       options={noduleLanguageMapper(
                         getDict("nodule.composition")
@@ -125,58 +116,38 @@ export const NoduleTable = () => {
                 </div>
 
                 <div className="space-y-2" data-tour="nodule-medidas">
-                  <Label>Medidas (mm)</Label>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="ap"
-                        className="text-xs text-muted-foreground"
-                      >
-                        AP
-                      </Label>
-                      <Input
-                        id="ap"
-                        type="number"
-                        value={6}
-                        // onChange={(e) => updateNodule("ap", e.target.value)}
-                        placeholder="0"
-                        className="text-center text-lg font-semibold"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="t"
-                        className="text-xs text-muted-foreground"
-                      >
-                        T
-                      </Label>
-                      <Input
-                        id="t"
-                        type="number"
-                        value={8}
-                        // onChange={(e) => updateNodule("t", e.target.value)}
-                        placeholder="0"
-                        className="text-center text-lg font-semibold"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="cc"
-                        className="text-xs text-muted-foreground"
-                      >
-                        CC
-                      </Label>
-                      <Input
-                        id="cc"
-                        type="number"
-                        value={10}
-                        // onChange={(e) => updateNodule("cc", e.target.value)}
-                        placeholder="0"
-                        className="text-center text-lg font-semibold"
-                      />
-                    </div>
-                  </div>
+                  <Label>Medidas</Label>
+                  <Sortable
+                    value={dimensions}
+                    onValueChange={setDimensions}
+                    getItemValue={(item) => item.id}
+                    orientation="horizontal"
+                  >
+                    <SortableContent asChild>
+                      <div className="flex w-full gap-2">
+                        {dimensions.map((dimension) => (
+                          <SortableItem
+                            key={dimension.id}
+                            value={dimension.id}
+                            asChild
+                          >
+                            <div className="flex flex-1 min-w-[100px]">
+                              <CustomInput
+                                value={nodules[0][dimension.id]}
+                                placeholder="0"
+                                label={dimension.label}
+                                onChange={(value) => {
+                                  updateDimension(1, dimension, value);
+                                }}
+                                withoutArrow
+                                className="w-full"
+                              />
+                            </div>
+                          </SortableItem>
+                        ))}
+                      </div>
+                    </SortableContent>
+                  </Sortable>
                 </div>
               </div>
 
@@ -190,7 +161,7 @@ export const NoduleTable = () => {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="ecogenicidad">Ecogenicidad</Label>
+                    <Label>Ecogenicidad</Label>
                     <CustomSelect
                       options={noduleLanguageMapper(
                         getDict("nodule.echogenicity")
@@ -201,7 +172,7 @@ export const NoduleTable = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="margen">Margen</Label>
+                    <Label>Margen</Label>
                     <CustomSelect
                       options={noduleLanguageMapper(getDict("nodule.margin"))}
                       defaultValue={nodules[0].margin}
@@ -212,9 +183,7 @@ export const NoduleTable = () => {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="extension-extratiroidea">
-                      Extensión extratiroidea
-                    </Label>
+                    <Label>Extensión extratiroidea</Label>
                     <Select
                       value="no"
                       // onValueChange={(value) =>
@@ -249,9 +218,7 @@ export const NoduleTable = () => {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="extension-extratiroidea">
-                      Puntos ecogénicos
-                    </Label>
+                    <Label>Puntos ecogénicos</Label>
                     <Select
                       value="no"
                       // onValueChange={(value) =>
@@ -293,7 +260,7 @@ export const NoduleTable = () => {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="vascularizacion">Vascularización</Label>
+                      <Label>Vascularización</Label>
                       <CustomSelect
                         options={noduleLanguageMapper(
                           getDict("nodule.vascularity")
@@ -304,9 +271,7 @@ export const NoduleTable = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="tipo-vascularizacion">
-                        Tipo de vascularización
-                      </Label>
+                      <Label>Tipo de vascularización</Label>
                       <CustomSelect
                         options={noduleLanguageMapper(
                           getDict("nodule.vascularityType")
@@ -330,10 +295,7 @@ export const NoduleTable = () => {
 
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="space-y-2">
-                    <Label
-                      htmlFor="mas-alto-ancho"
-                      className="text-sm text-muted-foreground"
-                    >
+                    <Label className="text-sm text-muted-foreground">
                       Más alto que ancho
                     </Label>
                     <Input
@@ -347,10 +309,7 @@ export const NoduleTable = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label
-                      htmlFor="mas-alto-largo"
-                      className="text-sm text-muted-foreground"
-                    >
+                    <Label className="text-sm text-muted-foreground">
                       Más alto que largo
                     </Label>
                     <Input
@@ -364,10 +323,7 @@ export const NoduleTable = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label
-                      htmlFor="tirads"
-                      className="text-sm text-muted-foreground"
-                    >
+                    <Label className="text-sm text-muted-foreground">
                       ACR TI-RADS
                     </Label>
                     <div className="flex flex-col gap-2">
@@ -380,7 +336,7 @@ export const NoduleTable = () => {
               </div>
 
               <div className="space-y-2 pt-4">
-                <Label htmlFor="observaciones">Observaciones adicionales</Label>
+                <Label>Observaciones adicionales</Label>
                 <Textarea
                   id="observaciones"
                   className="min-h-[100px] resize-none"

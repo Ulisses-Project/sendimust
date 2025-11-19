@@ -1,9 +1,15 @@
 import type { Lobe, Nodule } from "@/types/nodule/nodule.type";
 import { createContext, useState, type PropsWithChildren } from "react";
+import type { Dimension } from "./DimensionsContext";
 
 interface NoduleContext {
   nodules: Nodule[];
   updateLobe: (id: number, newLobe: Lobe) => void;
+  updateDimension: (
+    id: number,
+    dimensionName: Dimension,
+    newDimension: string
+  ) => void;
 }
 
 export const NoduleContext = createContext({} as NoduleContext);
@@ -14,9 +20,9 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
       id: 1,
       lobe: "right",
       location: "superior",
-      ap: 0,
-      cc: 0,
-      t: 0,
+      ap: "",
+      cc: "",
+      t: "",
       composition: "cannotBeAssessed",
       echogenicity: "cannotBeAssessed",
       margin: "cannotBeAssessed",
@@ -41,7 +47,25 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
     );
   };
 
+  const updateDimension = (
+    id: number,
+    dimensionName: Dimension,
+    newDimension: string
+  ) => {
+    const { id: dimensionID } = dimensionName;
+
+    console.log(id, dimensionID, newDimension);
+
+    setNodules((prev) =>
+      prev.map((nodule) =>
+        nodule.id === id ? { ...nodule, [dimensionID]: newDimension } : nodule
+      )
+    );
+  };
+
   return (
-    <NoduleContext value={{ nodules, updateLobe }}>{children}</NoduleContext>
+    <NoduleContext value={{ nodules, updateLobe, updateDimension }}>
+      {children}
+    </NoduleContext>
   );
 };

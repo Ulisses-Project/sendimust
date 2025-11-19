@@ -36,14 +36,10 @@ export const CustomCheckboxGrid = ({
             onClick={() => onChange(value)}
           >
             <Checkbox
-              id={`loc-${value}`}
               checked={currentValues.includes(value)}
               onCheckedChange={() => onChange(value)}
             />
-            <Label
-              htmlFor={`loc-${value}`}
-              className="cursor-pointer text-sm font-normal flex-1"
-            >
+            <Label className="cursor-pointer text-sm font-normal flex-1">
               {label}
             </Label>
           </div>

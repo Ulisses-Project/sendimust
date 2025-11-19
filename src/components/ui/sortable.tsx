@@ -474,7 +474,7 @@ interface SortableItemHandleProps extends React.ComponentProps<"button"> {
 }
 
 function SortableItemHandle(props: SortableItemHandleProps) {
-  const { asChild, disabled, className, ref, ...itemHandleProps } = props;
+  const { asChild, disabled, className, ref, tabIndex, ...itemHandleProps } = props;
 
   const context = useSortableContext(ITEM_HANDLE_NAME);
   const itemContext = useSortableItemContext(ITEM_HANDLE_NAME);
@@ -507,6 +507,7 @@ function SortableItemHandle(props: SortableItemHandleProps) {
         className,
       )}
       disabled={isDisabled}
+      tabIndex={tabIndex}
     />
   );
 }

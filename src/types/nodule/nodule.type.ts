@@ -2,9 +2,9 @@ export interface Nodule {
   id: number;
   lobe: Lobe;
   location: Location;
-  ap: number;
-  cc: number;
-  t: number;
+  ap: string;
+  cc: string;
+  t: string;
   composition: Composition;
   echogenicity: Echogenicity;
   margin: Margin;
