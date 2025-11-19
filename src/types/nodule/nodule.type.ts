@@ -1,16 +1,16 @@
 export interface Nodule {
   id: number;
   lobe: Lobe;
-  location: Location;
+  location: Location[];
   ap: string;
   cc: string;
   t: string;
   composition: Composition;
   echogenicity: Echogenicity;
   margin: Margin;
-  isExtrathyroidalExtension: boolean;
+  isExtrathyroidalExtension: isExtrathyroidalExtension;
   extrathyroidalExtensionLocation: ExtrathyroidalExtensionLocation;
-  isCalcification: boolean;
+  isCalcification: isCalcification;
   calcificationType: CalcificationType;
   vascularity: Vascularity;
   vascularityType: VascularityType;
@@ -26,10 +26,12 @@ export interface NoduleTranslation {
   composition: Record<Composition, string>;
   echogenicity: Record<Echogenicity, string>;
   margin: Record<Margin, string>;
+  isExtrathyroidalExtension: Record<isExtrathyroidalExtension, string>;
   extrathyroidalExtensionLocation: Record<
     ExtrathyroidalExtensionLocation,
     string
   >;
+  isCalcification: Record<isCalcification, string>;
   calcificationType: Record<CalcificationType, string>;
   vascularity: Record<Vascularity, string>;
   vascularityType: Record<VascularityType, string>;
@@ -79,11 +81,15 @@ export type Margin =
   | "microlobulated"
   | "infiltrating";
 
+export type isExtrathyroidalExtension = "no" | "yes";
+
 export type ExtrathyroidalExtensionLocation =
   | "anterior"
   | "posterior"
   | "medial"
   | "lateral";
+
+export type isCalcification = "no" | "yes";
 
 export type CalcificationType =
   | "microcalcifications"

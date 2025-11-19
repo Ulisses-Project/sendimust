@@ -1,8 +1,29 @@
 import { ChevronLeft, ChevronRight, MapPin, Ruler } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { use } from "react";
+import { NoduleContext } from "@/context/NoduleContext";
+import type { Nodule } from "@/types/nodule/nodule.type";
 
-export const NoduleStickyBar = () => {
+interface NoduleStickyBarProps {
+  handlePreviousNodule: (currentNoduleIndex: number) => void;
+  handleNextNodule: (currentNoduleIndex: number) => void;
+}
+
+export const NoduleStickyBar = ({
+  handleNextNodule,
+  handlePreviousNodule,
+}: NoduleStickyBarProps) => {
+  const { nodules, currentNoduleId } = use(NoduleContext);
+
+  const currentNoduleIndex = nodules.findIndex(
+    (nodule) => nodule.id === currentNoduleId
+  );
+
+  const currentNodule = nodules.find(
+    (nodule) => nodule.id === currentNoduleId
+  ) as Nodule;
+
   return (
     <div
       className="sticky top-0 z-10 border-b bg-linear-to-r from-primary/5 via-primary/10 to-primary/5 backdrop-blur-sm shadow-sm"
@@ -12,34 +33,44 @@ export const NoduleStickyBar = () => {
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Badge className="text-base px-3 py-1.5 font-semibold">
-              Nódulo 1
+              Nódulo {currentNoduleId}
             </Badge>
 
             <div className="flex items-center gap-3 text-sm">
               <div className="flex items-center gap-1.5">
                 <MapPin className="h-4 w-4 text-primary" />
                 <span className="font-medium">Lóbulo:</span>
-                <span className="text-muted-foreground capitalize">LTD</span>
+                <span className="text-muted-foreground">
+                  {currentNodule.lobe}
+                </span>
               </div>
 
               <div className="h-4 w-px bg-border" />
               <div className="flex items-center gap-1.5">
                 <span className="font-medium">Localización:</span>
-                <span className="text-muted-foreground">Superior, Medial</span>
+                <span className="text-muted-foreground">
+                  {currentNodule.location.toString()}
+                </span>
               </div>
 
               <div className="h-4 w-px bg-border" />
               <div className="flex items-center gap-1.5">
                 <Ruler className="h-4 w-4 text-primary" />
                 <span className="font-medium">Medidas (mm):</span>
-                <span className="text-muted-foreground">6 x 8 x 10</span>
+                <span className="text-muted-foreground">
+                  {currentNodule.ap +
+                    "," +
+                    currentNodule.cc +
+                    "," +
+                    currentNodule.t}
+                </span>
               </div>
 
               <div className="h-4 w-px bg-border" />
               <div className="flex items-center gap-1.5">
                 <span className="font-medium">Composición:</span>
                 <Badge className="text-xs capitalize">
-                  Predominantemente sólido
+                  {currentNodule.composition}
                 </Badge>
               </div>
 
@@ -58,8 +89,8 @@ export const NoduleStickyBar = () => {
             <Button
               variant="outline"
               size="sm"
-              // onClick={goToPreviousNodule}
-              // disabled={currentNoduleIndex === 0}
+              onClick={() => handlePreviousNodule(currentNoduleIndex)}
+              disabled={currentNoduleIndex === 0}
               title="Nódulo anterior (Ctrl + ←)"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -67,8 +98,8 @@ export const NoduleStickyBar = () => {
             <Button
               variant="outline"
               size="sm"
-              // onClick={goToNextNodule}
-              // disabled={currentNoduleIndex === nodules.length - 1}
+              onClick={() => handleNextNodule(currentNoduleIndex)}
+              disabled={currentNoduleIndex === nodules.length - 1}
               title="Nódulo siguiente (Ctrl + →)"
             >
               <ChevronRight className="h-4 w-4" />

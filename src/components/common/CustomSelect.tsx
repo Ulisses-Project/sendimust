@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/select";
 
 interface CustomSelectProps {
-  defaultValue: string;
+  value: string;
   options: Option[];
   onChange: (value: string) => void;
 }
@@ -18,12 +18,12 @@ export interface Option {
 }
 
 export const CustomSelect = ({
-  defaultValue,
+  value,
   options,
   onChange,
 }: CustomSelectProps) => {
   return (
-    <Select defaultValue={defaultValue} onValueChange={onChange}>
+    <Select value={value} onValueChange={onChange}>
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>

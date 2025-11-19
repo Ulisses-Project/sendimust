@@ -43,11 +43,19 @@ const nodule: NoduleTranslation = {
     microlobulated: "Microlobular",
     infiltrating: "Infiltrante",
   },
+  isExtrathyroidalExtension: {
+    yes: "Sí",
+    no: "No",
+  },
   extrathyroidalExtensionLocation: {
     anterior: "Anterior",
     posterior: "Posterior",
     medial: "Medial",
     lateral: "Lateral",
+  },
+  isCalcification: {
+    yes: "Sí",
+    no: "No/Artefactos de reverberación",
   },
   calcificationType: {
     microcalcifications: "Microcalcificaciones",
