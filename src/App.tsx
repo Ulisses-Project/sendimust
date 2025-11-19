@@ -7,6 +7,8 @@ import { CustomSwitchCard } from "./components/common/CustomSwitchCard";
 import { LymphNodeTable } from "./components/lymph/LymphNodeTable";
 import { useState } from "react";
 import { NoduleTable } from "./components/nodule/NoduleTable";
+import { NoduleProvider } from "./context/NoduleContext";
+import { LanguageProvider } from "./context/LanguageContext";
 
 function App() {
   const [showLymphNode, setShowLymphNode] = useState(false);
@@ -15,35 +17,39 @@ function App() {
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <div className="flex h-screen flex-col">
-          <CustomHeader />
-          <div className="flex-1 overflow-auto p-6">
-            <div className="mx-auto max-w-7xl space-y-6">
-              <LobeGrid />
+        <LanguageProvider>
+          <NoduleProvider>
+            <div className="flex h-screen flex-col">
+              <CustomHeader />
+              <div className="flex-1 overflow-auto p-6">
+                <div className="mx-auto max-w-7xl space-y-6">
+                  <LobeGrid />
 
-              {/*Lymph Nodes */}
-              <CustomSwitchCard
-                title="Ganglios linfáticos cervicales reseñables"
-                id="lymphNodes"
-                checked={showLymphNode}
-                handleCheckedChange={setShowLymphNode}
-              >
-                <LymphNodeTable />
-              </CustomSwitchCard>
+                  {/*Lymph Nodes */}
+                  <CustomSwitchCard
+                    title="Ganglios linfáticos cervicales reseñables"
+                    id="lymphNodes"
+                    checked={showLymphNode}
+                    handleCheckedChange={setShowLymphNode}
+                  >
+                    <LymphNodeTable />
+                  </CustomSwitchCard>
 
-              {/*Nodules */}
-              <CustomSwitchCard
-                title="Nódulos tiroideos reseñables"
-                id="Nodule"
-                checked={showNodule}
-                handleCheckedChange={setshowNodule}
-              >
-                <NoduleTable />
-              </CustomSwitchCard>
+                  {/*Nodules */}
+                  <CustomSwitchCard
+                    title="Nódulos tiroideos reseñables"
+                    id="Nodule"
+                    checked={showNodule}
+                    handleCheckedChange={setshowNodule}
+                  >
+                    <NoduleTable />
+                  </CustomSwitchCard>
+                </div>
+              </div>
+              <CustomFooter />
             </div>
-          </div>
-          <CustomFooter />
-        </div>
+          </NoduleProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </>
   );
