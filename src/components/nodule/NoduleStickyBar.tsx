@@ -1,11 +1,22 @@
-import { ChevronLeft, ChevronRight, MapPin, Ruler } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Ruler, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { use, useContext } from "react";
+import { use, useContext, useState } from "react";
 import { NoduleContext } from "@/context/NoduleContext";
 import type { Nodule } from "@/types/nodule/nodule.type";
 import { useDimensions } from "@/context/DimensionsContext";
 import { LanguageContext } from "@/context/LanguageContext";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface NoduleStickyBarProps {
   handlePreviousNodule: (currentNoduleIndex: number) => void;
@@ -16,9 +27,10 @@ export const NoduleStickyBar = ({
   handleNextNodule,
   handlePreviousNodule,
 }: NoduleStickyBarProps) => {
-  const { nodules, currentNoduleId } = use(NoduleContext);
+  const { nodules, currentNoduleId, removeNodule } = use(NoduleContext);
   const { dimensions } = useDimensions();
   const { t } = useContext(LanguageContext);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const currentNoduleIndex = nodules.findIndex(
     (nodule) => nodule.id === currentNoduleId
@@ -32,6 +44,11 @@ export const NoduleStickyBar = ({
   const formattedDimensions = dimensions
     .map((dim) => currentNodule[dim.id])
     .join(" x ");
+
+  const handleDelete = (type: "delete" | "biopsy") => {
+    removeNodule(currentNoduleId, type);
+    setIsDeleteDialogOpen(false);
+  };
 
   return (
     <div
@@ -82,9 +99,7 @@ export const NoduleStickyBar = ({
                   <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
                     Medidas (mm)
                   </span>
-                  <span className="font-medium font-mono">
-                    {formattedDimensions}
-                  </span>
+                  <span className="font-medium">{formattedDimensions}</span>
                 </div>
               </div>
 
@@ -114,6 +129,49 @@ export const NoduleStickyBar = ({
             className="flex items-center gap-2 shrink-0"
             data-tour="nodule-navigation"
           >
+            <AlertDialog
+              open={isDeleteDialogOpen}
+              onOpenChange={setIsDeleteDialogOpen}
+            >
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  disabled={nodules.length <= 1}
+                  title="Eliminar nódulo"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>¿Eliminar nódulo?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Seleccione una opción para eliminar el nódulo{" "}
+                    {currentNoduleId}.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => handleDelete("biopsy")}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    Biopsiar
+                  </AlertDialogAction>
+                  <AlertDialogAction
+                    onClick={() => handleDelete("delete")}
+                    className="bg-destructive hover:bg-destructive/90"
+                  >
+                    Eliminar (Error)
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            <div className="h-8 w-px bg-border/60 mx-1" />
+
             <Button
               variant="outline"
               size="sm"

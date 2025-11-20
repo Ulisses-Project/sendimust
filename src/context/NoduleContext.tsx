@@ -11,6 +11,7 @@ interface NoduleContext {
   ) => void;
   setCurrentNoduleId: (id: number) => void;
   addNodule: () => void;
+  removeNodule: (id: number, type: "delete" | "biopsy") => void;
 }
 
 export const NoduleContext = createContext({} as NoduleContext);
@@ -41,6 +42,8 @@ const getDefaultNodule = (id: number): Nodule => {
 
 export const NoduleProvider = ({ children }: PropsWithChildren) => {
   const [currentNoduleId, setCurrentNoduleId] = useState(1);
+  // Initialize maxId based on initial nodules
+  const [maxId, setMaxId] = useState(2);
 
   const [nodules, setNodules] = useState<Nodule[]>([
     getDefaultNodule(1),
@@ -59,15 +62,32 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
     );
   };
 
-  const getGreatestId = (nodules: Nodule[]) => {
-    const ids = nodules.map((nodule) => nodule.id);
-    return Math.max(...ids);
+  const addNodule = () => {
+    const newId = maxId + 1;
+    const newNodule = getDefaultNodule(newId);
+    setMaxId(newId);
+    setNodules((prev) => [...prev, newNodule]);
+    setCurrentNoduleId(newId);
   };
 
-  const addNodule = () => {
-    const newNodule = getDefaultNodule(getGreatestId(nodules) + 1);
-    setCurrentNoduleId(newNodule.id);
-    setNodules((prev) => [...prev, newNodule]);
+  const removeNodule = (id: number, type: "delete" | "biopsy") => {
+    const currentIndex = nodules.findIndex((n) => n.id === id);
+    const updatedNodules = nodules.filter((n) => n.id !== id);
+
+    if (id === currentNoduleId && updatedNodules.length > 0) {
+      const newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+      setCurrentNoduleId(updatedNodules[newIndex].id);
+    }
+
+    if (type === "delete" && id === maxId) {
+      const newMaxId =
+        updatedNodules.length > 0
+          ? Math.max(...updatedNodules.map((n) => n.id))
+          : 0;
+      setMaxId(newMaxId);
+    }
+
+    setNodules(updatedNodules);
   };
 
   return (
@@ -78,6 +98,7 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
         updateNoduleField,
         setCurrentNoduleId,
         addNodule,
+        removeNodule,
       }}
     >
       {children}
