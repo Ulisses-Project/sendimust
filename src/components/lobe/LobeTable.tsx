@@ -23,16 +23,15 @@ import {
   SortableItemHandle,
 } from "@/components/ui/sortable";
 import { useDimensions } from "@/context/DimensionsContext";
-import { useContext } from "react";
+import { use } from "react";
 import { LobeContext } from "@/context/LobeContext";
 import { LanguageContext } from "@/context/LanguageContext";
-import { cn } from "@/lib/utils";
 import { CustomInput } from "../common/CustomInput";
 
 export const LobeTable = () => {
   const { dimensions, setDimensions } = useDimensions();
-  const { thyroidalLobes, updateLobe } = useContext(LobeContext);
-  const { t } = useContext(LanguageContext);
+  const { thyroidalLobes, updateLobe } = use(LobeContext);
+  const { t } = use(LanguageContext);
 
   return (
     <div>
@@ -114,42 +113,36 @@ export const LobeTable = () => {
                     />
                   </div>
                 </TableCell>
-                <TableCell className="w-[100px]">
-                  <div
-                    className={cn(
-                      "flex items-center justify-center",
-                      lobe.isAbsent && "invisible"
-                    )}
-                  >
-                    <Checkbox
-                      checked={lobe.isDefault}
-                      onCheckedChange={(value) =>
-                        updateLobe(lobe.id, "isDefault", !!value)
-                      }
-                    />
-                  </div>
-                </TableCell>
-                {dimensions.map((dimension) => (
-                  <TableCell key={dimension.id} className="w-[100px]">
-                    <div
-                      className={cn(
-                        "flex items-center justify-center",
-                        lobe.isAbsent && "invisible"
-                      )}
-                    >
-                      <CustomInput
-                        value={lobe[dimension.id]}
-                        onChange={(value) =>
-                          updateLobe(lobe.id, dimension.id, value)
-                        }
-                        withoutArrow
-                        className="w-20 text-center"
-                        placeholder="0"
-                        disabled={lobe.isDefault}
-                      />
-                    </div>
-                  </TableCell>
-                ))}
+                {!lobe.isAbsent && (
+                  <>
+                    <TableCell className="w-[100px]">
+                      <div className="flex items-center justify-center">
+                        <Checkbox
+                          checked={lobe.isDefault}
+                          onCheckedChange={(value) =>
+                            updateLobe(lobe.id, "isDefault", !!value)
+                          }
+                        />
+                      </div>
+                    </TableCell>
+                    {dimensions.map((dimension) => (
+                      <TableCell key={dimension.id} className="w-[100px]">
+                        <div className="flex items-center justify-center">
+                          <CustomInput
+                            value={lobe[dimension.id]}
+                            onChange={(value) =>
+                              updateLobe(lobe.id, dimension.id, value)
+                            }
+                            withoutArrow
+                            className="w-20 text-center"
+                            placeholder="0"
+                            disabled={lobe.isDefault}
+                          />
+                        </div>
+                      </TableCell>
+                    ))}
+                  </>
+                )}
               </TableRow>
             ))}
           </TableBody>

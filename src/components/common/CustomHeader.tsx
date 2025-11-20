@@ -6,19 +6,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { Globe, HelpCircle, Keyboard, Settings } from "lucide-react";
-import { use, useState } from "react";
+import { HelpCircle, Keyboard, Settings } from "lucide-react";
+import { use } from "react";
 import { LanguageContext } from "@/context/LanguageContext";
 
 export const CustomHeader = () => {
-  // const [language, setLanguage] = useState("Español");
-
-  const { language, setLanguage } = use(LanguageContext);
-
-  const handleLanguageChange = (language: string) => {
-    const selectedLanguage = language == "Español" ? "es" : "en";
-    setLanguage(selectedLanguage);
-  };
+  const { languageConfig, languageOptions, setLanguage } = use(LanguageContext);
 
   return (
     <header className="border-b border-border bg-card">
@@ -41,17 +34,20 @@ export const CustomHeader = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm">
-                <Globe className="mr-2 h-4 w-4" />
-                {language}
+                <languageConfig.Flag className="mr-2 h-4 w-4" />
+                {languageConfig.name}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => handleLanguageChange("Español")}>
-                Español
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleLanguageChange("English")}>
-                English
-              </DropdownMenuItem>
+              {languageOptions.map((option) => (
+                <DropdownMenuItem
+                  key={option.code}
+                  onClick={() => setLanguage(option.code)}
+                >
+                  <option.Flag className="mr-2 h-4 w-4" />
+                  {option.name}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
 
