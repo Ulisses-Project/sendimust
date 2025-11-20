@@ -10,51 +10,59 @@ import { NoduleTable } from "./components/nodule/NoduleTable";
 import { NoduleProvider } from "./context/NoduleContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import { LobeProvider } from "./context/LobeContext";
+import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 
-function App() {
+function AppContent() {
   const [showLymphNode, setShowLymphNode] = useState(false);
   const [showNodule, setshowNodule] = useState(false);
 
+  // Activar atajos de teclado globales
+  useKeyboardShortcuts();
+
   return (
-    <>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <LanguageProvider>
-          <NoduleProvider>
-            <LobeProvider>
-              <div className="flex h-screen flex-col">
-                <CustomHeader />
-                <div className="flex-1 overflow-auto p-6">
-                  <div className="mx-auto max-w-7xl space-y-6">
-                    <LobeGrid />
+    <div className="flex h-screen flex-col">
+      <CustomHeader />
+      <div className="flex-1 overflow-auto p-6">
+        <div className="mx-auto max-w-7xl space-y-6">
+          <LobeGrid />
 
-                    {/*Lymph Nodes */}
-                    <CustomSwitchCard
-                      title="Ganglios linfáticos cervicales reseñables"
-                      id="lymphNodes"
-                      checked={showLymphNode}
-                      handleCheckedChange={setShowLymphNode}
-                    >
-                      <LymphNodeTable />
-                    </CustomSwitchCard>
+          {/*Lymph Nodes */}
+          <CustomSwitchCard
+            title="Ganglios linfáticos cervicales reseñables"
+            id="lymphNodes"
+            checked={showLymphNode}
+            handleCheckedChange={setShowLymphNode}
+          >
+            <LymphNodeTable />
+          </CustomSwitchCard>
 
-                    {/*Nodules */}
-                    <CustomSwitchCard
-                      title="Nódulos tiroideos reseñables"
-                      id="Nodule"
-                      checked={showNodule}
-                      handleCheckedChange={setshowNodule}
-                    >
-                      <NoduleTable />
-                    </CustomSwitchCard>
-                  </div>
-                </div>
-                <CustomFooter />
-              </div>
-            </LobeProvider>
-          </NoduleProvider>
-        </LanguageProvider>
-      </ThemeProvider>
-    </>
+          {/*Nodules */}
+          <CustomSwitchCard
+            title="Nódulos tiroideos reseñables"
+            id="Nodule"
+            checked={showNodule}
+            handleCheckedChange={setshowNodule}
+          >
+            <NoduleTable />
+          </CustomSwitchCard>
+        </div>
+      </div>
+      <CustomFooter />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <LanguageProvider>
+        <NoduleProvider>
+          <LobeProvider>
+            <AppContent />
+          </LobeProvider>
+        </NoduleProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

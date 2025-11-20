@@ -13,6 +13,13 @@ import { LanguageContext } from "@/context/LanguageContext";
 export const CustomHeader = () => {
   const { languageConfig, languageOptions, setLanguage } = use(LanguageContext);
 
+  const isMac = () => {
+    return (
+      typeof window !== "undefined" &&
+      navigator.platform.toUpperCase().indexOf("MAC") >= 0
+    );
+  };
+
   return (
     <header className="border-b border-border bg-card">
       <div className="flex h-16 items-center justify-between px-6">
@@ -73,10 +80,32 @@ export const CustomHeader = () => {
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">
-                      Invertir orden de T y CC
+                      Nódulo anterior
                     </span>
                     <kbd className="rounded bg-muted px-2 py-1 text-xs font-mono">
-                      Ctrl + I
+                      {isMac() ? "⌘" : "Ctrl"} + ←
+                    </kbd>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">
+                      Nódulo siguiente
+                    </span>
+                    <kbd className="rounded bg-muted px-2 py-1 text-xs font-mono">
+                      {isMac() ? "⌘" : "Ctrl"} + →
+                    </kbd>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Nuevo nódulo</span>
+                    <kbd className="rounded bg-muted px-2 py-1 text-xs font-mono">
+                      Ctrl + N
+                    </kbd>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">
+                      Eliminar nódulo
+                    </span>
+                    <kbd className="rounded bg-muted px-2 py-1 text-xs font-mono">
+                      Ctrl + ⌫
                     </kbd>
                   </div>
                 </div>

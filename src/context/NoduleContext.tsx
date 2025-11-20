@@ -88,6 +88,11 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
   };
 
   const removeNodule = (id: number, type: "delete" | "biopsy") => {
+    //* Prevent deleting the last nodule
+    if (nodules.length <= 1 && type === "delete") {
+      return;
+    }
+
     const currentIndex = nodules.findIndex((n) => n.id === id);
     const updatedNodules = nodules.filter((n) => n.id !== id);
 

@@ -66,33 +66,25 @@ export const LobeTable = () => {
                   </TooltipProvider>
                 </div>
               </TableHead>
-              <SortableContent asChild>
-                <>
-                  {dimensions.map((dimension) => (
-                    <SortableItem
-                      key={dimension.id}
-                      value={dimension.id}
-                      asChild
-                    >
-                      <TableHead className="text-center w-[100px]">
-                        <div className="flex items-center justify-center gap-1">
-                          <SortableItemHandle asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-20 hover:cursor-grab active:cursor-grabbing hover:bg-transparent"
-                            >
-                              <GripVertical className="h-4 w-4 text-muted-foreground" />
-                              <span className="font-bold">
-                                {dimension.label}
-                              </span>
-                            </Button>
-                          </SortableItemHandle>
-                        </div>
-                      </TableHead>
-                    </SortableItem>
-                  ))}
-                </>
+              <SortableContent withoutSlot>
+                {dimensions.map((dimension) => (
+                  <SortableItem key={dimension.id} value={dimension.id} asChild>
+                    <TableHead className="text-center w-[100px]">
+                      <div className="flex items-center justify-center gap-1">
+                        <SortableItemHandle asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-20 hover:cursor-grab active:cursor-grabbing hover:bg-transparent"
+                          >
+                            <GripVertical className="h-4 w-4 text-muted-foreground" />
+                            <span className="font-bold">{dimension.label}</span>
+                          </Button>
+                        </SortableItemHandle>
+                      </div>
+                    </TableHead>
+                  </SortableItem>
+                ))}
               </SortableContent>
             </TableRow>
           </TableHeader>
