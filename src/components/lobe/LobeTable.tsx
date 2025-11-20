@@ -6,8 +6,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Info, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,15 +23,16 @@ import {
   SortableItemHandle,
 } from "@/components/ui/sortable";
 import { useDimensions } from "@/context/DimensionsContext";
-
-const LOBULOS_DATA = [
-  { id: "derecho", label: "Lóbulo derecho" },
-  { id: "izquierdo", label: "Lóbulo izquierdo" },
-  { id: "istmo", label: "Istmo" },
-] as const;
+import { useContext } from "react";
+import { LobeContext } from "@/context/LobeContext";
+import { LanguageContext } from "@/context/LanguageContext";
+import { cn } from "@/lib/utils";
+import { CustomInput } from "../common/CustomInput";
 
 export const LobeTable = () => {
   const { dimensions, setDimensions } = useDimensions();
+  const { thyroidalLobes, updateLobe } = useContext(LobeContext);
+  const { t } = useContext(LanguageContext);
 
   return (
     <div>
@@ -98,26 +99,53 @@ export const LobeTable = () => {
           </TableHeader>
 
           <TableBody>
-            {LOBULOS_DATA.map((lobulo) => (
-              <TableRow key={lobulo.id}>
+            {thyroidalLobes.lobes.map((lobe) => (
+              <TableRow key={lobe.id}>
                 <TableCell className="font-medium w-[200px]">
-                  {lobulo.label}
+                  {t(`lobe.id.${lobe.id}`)}
                 </TableCell>
-                {["Ausente", "Por defecto"].map((item) => (
-                  <TableCell key={item} className="w-[100px]">
-                    <div className="flex items-center justify-center">
-                      <Checkbox />
-                    </div>
-                  </TableCell>
-                ))}
+                <TableCell className="w-[100px]">
+                  <div className="flex items-center justify-center">
+                    <Switch
+                      checked={lobe.isAbsent}
+                      onCheckedChange={(value) =>
+                        updateLobe(lobe.id, "isAbsent", value)
+                      }
+                    />
+                  </div>
+                </TableCell>
+                <TableCell className="w-[100px]">
+                  <div
+                    className={cn(
+                      "flex items-center justify-center",
+                      lobe.isAbsent && "invisible"
+                    )}
+                  >
+                    <Checkbox
+                      checked={lobe.isDefault}
+                      onCheckedChange={(value) =>
+                        updateLobe(lobe.id, "isDefault", !!value)
+                      }
+                    />
+                  </div>
+                </TableCell>
                 {dimensions.map((dimension) => (
                   <TableCell key={dimension.id} className="w-[100px]">
-                    <div className="flex items-center justify-center">
-                      <Input
-                        type="number"
+                    <div
+                      className={cn(
+                        "flex items-center justify-center",
+                        lobe.isAbsent && "invisible"
+                      )}
+                    >
+                      <CustomInput
+                        value={lobe[dimension.id]}
+                        onChange={(value) =>
+                          updateLobe(lobe.id, dimension.id, value)
+                        }
                         withoutArrow
                         className="w-20 text-center"
                         placeholder="0"
+                        disabled={lobe.isDefault}
                       />
                     </div>
                   </TableCell>

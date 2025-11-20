@@ -11,6 +11,7 @@ interface CustomInputProps {
   label?: string;
   withoutArrow?: boolean;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
 export const CustomInput = ({
@@ -20,6 +21,7 @@ export const CustomInput = ({
   label,
   withoutArrow,
   onChange,
+  disabled,
 }: CustomInputProps) => {
   return (
     <div className={className}>
@@ -48,6 +50,7 @@ export const CustomInput = ({
         placeholder={placeholder}
         className="text-center text-lg font-semibold w-full"
         withoutArrow={withoutArrow}
+        disabled={disabled}
       />
     </div>
   );

@@ -1,39 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LobeTable } from "@/components/lobe/LobeTable";
-import { CustomSelect, type Option } from "../common/CustomSelect";
+import { CustomSelect } from "../common/CustomSelect";
 import { Textarea } from "../ui/textarea";
-
-const globalEchogenicity: Option[] = [
-  { value: "homogeneous", label: "Homogénea" },
-  { value: "heterogeneous", label: "Heterogénea" },
-];
-
-const globalVascularization: Option[] = [
-  { value: "not-evaluated", label: "No evaluada" },
-  { value: "normal", label: "Normal" },
-  { value: "decreased", label: "Disminuida" },
-  { value: "increased", label: "Aumentada" },
-];
-
-const lobeGridOptions = [
-  {
-    title: "Ecogenicidad global",
-    defaultValue: "homogeneous",
-    options: globalEchogenicity,
-    //! Descomentar cuando creemos funcionalidad
-    // onChange: (value) => console.log(value)
-  },
-
-  {
-    title: "Vascularización global",
-    defaultValue: "not-evaluated",
-    options: globalVascularization,
-    //! Descomentar cuando creemos funcionalidad
-    // onChange: (value) => console.log(value)
-  },
-];
+import { use } from "react";
+import { LanguageContext } from "@/context/LanguageContext";
+import { noduleLanguageMapper } from "@/lib/utils";
+import { LobeContext } from "@/context/LobeContext";
+import type {
+  GlobalEchogenicity,
+  GlobalVascularity,
+} from "@/types/lobe/lobe.type";
 
 export const LobeGrid = () => {
+  const { getDict } = use(LanguageContext);
+  const { thyroidalLobes, updateGlobalField } = use(LobeContext);
+
   return (
     <Card data-tour="lobulos-table">
       <CardHeader>
@@ -57,28 +38,41 @@ export const LobeGrid = () => {
 
         {/* Ecogenicidad y vascularización */}
         <div className="grid grid-cols-1 sm:grid-cols-2">
-          {lobeGridOptions.map(
-            ({
-              title,
-              defaultValue,
-              options,
-              //! Descomentar cuando creemos funcionalidad
-              // onChange
-            }) => (
-              <Card withoutBorder className="py-10">
-                <CardHeader>
-                  <CardTitle>{title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CustomSelect
-                    defaultValue={defaultValue}
-                    options={options}
-                    onChange={(value) => console.log(value)}
-                  />
-                </CardContent>
-              </Card>
-            )
-          )}
+          <Card withoutBorder className="py-10">
+            <CardHeader>
+              <CardTitle>Ecogenicidad global</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CustomSelect
+                value={thyroidalLobes.globalEchogenicity}
+                options={noduleLanguageMapper(getDict("lobe.echogenicity"))}
+                onChange={(value) =>
+                  updateGlobalField(
+                    "globalEchogenicity",
+                    value as GlobalEchogenicity
+                  )
+                }
+              />
+            </CardContent>
+          </Card>
+
+          <Card withoutBorder className="py-10">
+            <CardHeader>
+              <CardTitle>Vascularización global</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CustomSelect
+                value={thyroidalLobes.globalVascularity}
+                options={noduleLanguageMapper(getDict("lobe.vascularity"))}
+                onChange={(value) =>
+                  updateGlobalField(
+                    "globalVascularity",
+                    value as GlobalVascularity
+                  )
+                }
+              />
+            </CardContent>
+          </Card>
         </div>
 
         {/* Observaciones */}
@@ -90,6 +84,10 @@ export const LobeGrid = () => {
             <Textarea
               placeholder="Ingrese observaciones adicionales..."
               className="min-h-32"
+              value={thyroidalLobes.observations}
+              onChange={(e) =>
+                updateGlobalField("observations", e.target.value)
+              }
             />
           </CardContent>
         </Card>
