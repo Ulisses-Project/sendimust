@@ -325,7 +325,9 @@ export const NoduleColumn = () => {
                   <Input
                     id="mas-alto-ancho"
                     type="text"
-                    value="No"
+                    value={t(
+                      `nodule.isTallerThanWide.${currentNodule.isTallerThanWide}`
+                    )}
                     readOnly
                     className="bg-background border-2 font-semibold text-center"
                     placeholder="Calculando..."
@@ -339,7 +341,9 @@ export const NoduleColumn = () => {
                   <Input
                     id="mas-alto-largo"
                     type="text"
-                    value="No"
+                    value={t(
+                      `nodule.isTallerThanLong.${currentNodule.isTallerThanLong}`
+                    )}
                     readOnly
                     className="bg-background border-2 font-semibold text-center"
                     placeholder="Calculando..."

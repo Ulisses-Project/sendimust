@@ -1,5 +1,6 @@
 import type { Nodule } from "@/types/nodule/nodule.type";
 import { createContext, useState, type PropsWithChildren } from "react";
+import { calculateNoduleRatios } from "@/lib/helpers/nodule";
 
 interface NoduleContext {
   currentNoduleId: number;
@@ -42,13 +43,13 @@ const getDefaultNodule = (id: number): Nodule => {
 
 export const NoduleProvider = ({ children }: PropsWithChildren) => {
   const [currentNoduleId, setCurrentNoduleId] = useState(1);
-  // Initialize maxId based on initial nodules
-  const [maxId, setMaxId] = useState(2);
-
   const [nodules, setNodules] = useState<Nodule[]>([
     getDefaultNodule(1),
     getDefaultNodule(2),
   ]);
+
+  // Initialize maxId based on initial nodules
+  const [maxId, setMaxId] = useState(nodules.length);
 
   const updateNoduleField = <K extends keyof Nodule>(
     id: number,
@@ -56,9 +57,25 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
     value: Nodule[K]
   ) => {
     setNodules((prev) =>
-      prev.map((nodule) =>
-        nodule.id === id ? { ...nodule, [field]: value } : nodule
-      )
+      prev.map((nodule) => {
+        if (nodule.id !== id) return nodule;
+
+        const updatedNodule = { ...nodule, [field]: value };
+
+        // Auto-calculate ratios if dimensions change
+        if (field === "ap" || field === "cc" || field === "t") {
+          const { isTallerThanWide, isTallerThanLong } = calculateNoduleRatios(
+            updatedNodule.ap,
+            updatedNodule.cc,
+            updatedNodule.t
+          );
+
+          updatedNodule.isTallerThanWide = isTallerThanWide;
+          updatedNodule.isTallerThanLong = isTallerThanLong;
+        }
+
+        return updatedNodule;
+      })
     );
   };
 
@@ -74,11 +91,14 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
     const currentIndex = nodules.findIndex((n) => n.id === id);
     const updatedNodules = nodules.filter((n) => n.id !== id);
 
+    //* Switch to the nearest nodule if current nodule is deleted
     if (id === currentNoduleId && updatedNodules.length > 0) {
+      //* If the deleted nodule is the current one, switch to the nearest nodule
       const newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
       setCurrentNoduleId(updatedNodules[newIndex].id);
     }
 
+    //* Update maxId if deleting the last nodule
     if (type === "delete" && id === maxId) {
       const newMaxId =
         updatedNodules.length > 0

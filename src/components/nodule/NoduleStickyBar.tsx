@@ -45,6 +45,13 @@ export const NoduleStickyBar = ({
     .map((dim) => currentNodule[dim.id])
     .join(" x ");
 
+  const hasLocation = currentNodule.location.length > 0;
+  const hasDimensions =
+    currentNodule.ap !== "" ||
+    currentNodule.cc !== "" ||
+    currentNodule.t !== "";
+  const hasComposition = currentNodule.composition !== "cannotBeAssessed";
+
   const handleDelete = (type: "delete" | "biopsy") => {
     removeNodule(currentNoduleId, type);
     setIsDeleteDialogOpen(false);
@@ -63,7 +70,7 @@ export const NoduleStickyBar = ({
             </Badge>
 
             <div className="flex items-center gap-4 text-sm whitespace-nowrap">
-              {/* Lobe */}
+              {/* Lobe - Always visible as it has a default and is primary */}
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
                 <div className="flex flex-col leading-none">
@@ -76,44 +83,50 @@ export const NoduleStickyBar = ({
                 </div>
               </div>
 
-              <div className="h-8 w-px bg-border/60" />
+              {hasLocation && (
+                <>
+                  <div className="h-8 w-px bg-border/60" />
+                  <div className="flex flex-col leading-none">
+                    <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                      Localización
+                    </span>
+                    <span className="font-medium">
+                      {currentNodule.location
+                        .map((loc) => t(`nodule.location.${loc}`))
+                        .join(", ")}
+                    </span>
+                  </div>
+                </>
+              )}
 
-              {/* Location */}
-              <div className="flex flex-col leading-none">
-                <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                  Localización
-                </span>
-                <span className="font-medium">
-                  {currentNodule.location
-                    .map((loc) => t(`nodule.location.${loc}`))
-                    .join(", ")}
-                </span>
-              </div>
+              {hasDimensions && (
+                <>
+                  <div className="h-8 w-px bg-border/60" />
+                  <div className="flex items-center gap-2">
+                    <Ruler className="h-4 w-4 text-primary" />
+                    <div className="flex flex-col leading-none">
+                      <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                        Medidas (mm)
+                      </span>
+                      <span className="font-medium">{formattedDimensions}</span>
+                    </div>
+                  </div>
+                </>
+              )}
 
-              <div className="h-8 w-px bg-border/60" />
-
-              {/* Dimensions */}
-              <div className="flex items-center gap-2">
-                <Ruler className="h-4 w-4 text-primary" />
-                <div className="flex flex-col leading-none">
-                  <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                    Medidas (mm)
-                  </span>
-                  <span className="font-medium">{formattedDimensions}</span>
-                </div>
-              </div>
-
-              <div className="h-8 w-px bg-border/60" />
-
-              {/* Composition */}
-              <div className="flex flex-col leading-none">
-                <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                  Composición
-                </span>
-                <span className="font-medium">
-                  {t(`nodule.composition.${currentNodule.composition}`)}
-                </span>
-              </div>
+              {hasComposition && (
+                <>
+                  <div className="h-8 w-px bg-border/60" />
+                  <div className="flex flex-col leading-none">
+                    <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                      Composición
+                    </span>
+                    <span className="font-medium">
+                      {t(`nodule.composition.${currentNodule.composition}`)}
+                    </span>
+                  </div>
+                </>
+              )}
 
               <div className="h-8 w-px bg-border/60" />
 
