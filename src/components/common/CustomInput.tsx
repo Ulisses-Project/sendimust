@@ -29,13 +29,13 @@ export const CustomInput = ({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 shrink-0 hover:cursor-grab active:cursor-grabbing"
+              className="h-8 w-6 shrink-0 hover:cursor-grab active:cursor-grabbing justify-start"
               tabIndex={-1}
               type="button"
             >
               <GripVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
-            <Label className="text-md text-muted-foreground grow hover:cursor-grab active:cursor-grabbing">
+            <Label className="text-md w-xl text-muted-foreground grow hover:cursor-grab active:cursor-grabbing">
               {label}
             </Label>
           </div>
