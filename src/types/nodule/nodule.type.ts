@@ -9,9 +9,9 @@ export interface Nodule {
   echogenicity: Echogenicity;
   margin: Margin;
   isExtrathyroidalExtension: isExtrathyroidalExtension;
-  extrathyroidalExtensionLocation: ExtrathyroidalExtensionLocation;
+  extrathyroidalExtensionLocation: ExtrathyroidalExtensionLocation[];
   isCalcification: isCalcification;
-  calcificationType: CalcificationType;
+  calcificationType: CalcificationType[];
   vascularity: Vascularity;
   vascularityType: VascularityType;
   isTallerThanWide: string;

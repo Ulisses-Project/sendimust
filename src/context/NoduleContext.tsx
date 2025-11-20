@@ -1,26 +1,14 @@
-import type {
-  isCalcification,
-  isExtrathyroidalExtension,
-  Lobe,
-  Nodule,
-} from "@/types/nodule/nodule.type";
+import type { Nodule } from "@/types/nodule/nodule.type";
 import { createContext, useState, type PropsWithChildren } from "react";
-import type { Dimension } from "./DimensionsContext";
 
 interface NoduleContext {
   currentNoduleId: number;
   nodules: Nodule[];
-  updateLobe: (id: number, newLobe: Lobe) => void;
-  updateDimension: (
+  updateNoduleField: <K extends keyof Nodule>(
     id: number,
-    dimensionName: Dimension,
-    newDimension: string
+    field: K,
+    value: Nodule[K]
   ) => void;
-  setExtrathyroidalExtension: (
-    id: number,
-    newExtrathyroidalExtension: isExtrathyroidalExtension
-  ) => void;
-  setCalcification: (id: number, newCalcification: isCalcification) => void;
   setCurrentNoduleId: (id: number) => void;
   addNodule: () => void;
 }
@@ -31,7 +19,7 @@ const getDefaultNodule = (id: number): Nodule => {
   return {
     id: id,
     lobe: "right",
-    location: ["superior"],
+    location: [],
     ap: "",
     cc: "",
     t: "",
@@ -39,9 +27,9 @@ const getDefaultNodule = (id: number): Nodule => {
     echogenicity: "cannotBeAssessed",
     margin: "cannotBeAssessed",
     isExtrathyroidalExtension: "no",
-    extrathyroidalExtensionLocation: "anterior",
+    extrathyroidalExtensionLocation: [],
     isCalcification: "no",
-    calcificationType: "microcalcifications",
+    calcificationType: [],
     vascularity: "notEvaluated",
     vascularityType: "low",
     isTallerThanWide: "no",
@@ -59,51 +47,14 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
     getDefaultNodule(2),
   ]);
 
-  const updateLobe = (id: number, newLobe: Lobe) => {
-    setNodules((prev) =>
-      prev.map((nodule) =>
-        nodule.id === id ? { ...nodule, lobe: newLobe } : nodule
-      )
-    );
-  };
-
-  const updateDimension = (
+  const updateNoduleField = <K extends keyof Nodule>(
     id: number,
-    dimensionName: Dimension,
-    newDimension: string
-  ) => {
-    const { id: dimensionID } = dimensionName;
-
-    console.log(id, dimensionID, newDimension);
-
-    setNodules((prev) =>
-      prev.map((nodule) =>
-        nodule.id === id ? { ...nodule, [dimensionID]: newDimension } : nodule
-      )
-    );
-  };
-
-  //! Cambiar esto
-  const setExtrathyroidalExtension = (
-    id: number,
-    newExtrathyroidalExtension: isExtrathyroidalExtension
+    field: K,
+    value: Nodule[K]
   ) => {
     setNodules((prev) =>
       prev.map((nodule) =>
-        nodule.id === id
-          ? { ...nodule, isExtrathyroidalExtension: newExtrathyroidalExtension }
-          : nodule
-      )
-    );
-  };
-
-  //! Cambiar esto
-  const setCalcification = (id: number, newCalcification: isCalcification) => {
-    setNodules((prev) =>
-      prev.map((nodule) =>
-        nodule.id === id
-          ? { ...nodule, isCalcification: newCalcification }
-          : nodule
+        nodule.id === id ? { ...nodule, [field]: value } : nodule
       )
     );
   };
@@ -124,10 +75,7 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
       value={{
         currentNoduleId,
         nodules,
-        updateLobe,
-        updateDimension,
-        setExtrathyroidalExtension,
-        setCalcification,
+        updateNoduleField,
         setCurrentNoduleId,
         addNodule,
       }}
