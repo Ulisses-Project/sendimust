@@ -6,15 +6,15 @@ export interface ThyroidalLobes {
 }
 
 export interface Lobe {
-  id: LobeId;
+  location: Location;
   ap: string;
-  cc: string;
-  t: string;
+  cc?: string;
+  t?: string;
   isAbsent: boolean;
   isDefault: boolean;
 }
 
-export type LobeId = "right" | "left" | "isthmus";
+export type Location = "right" | "left" | "isthmus";
 
 export type GlobalEchogenicity = "homogeneous" | "heterogeneous";
 
@@ -25,7 +25,7 @@ export type GlobalVascularity =
   | "increased";
 
 export interface LobeTranslation {
-  id: Record<LobeId, string>;
+  id: Record<Location, string>;
   echogenicity: Record<GlobalEchogenicity, string>;
   vascularity: Record<GlobalVascularity, string>;
 }

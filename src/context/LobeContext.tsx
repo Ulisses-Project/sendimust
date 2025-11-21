@@ -1,10 +1,10 @@
 import { createContext, useState, type PropsWithChildren } from "react";
-import type { Lobe, LobeId, ThyroidalLobes } from "@/types/lobe/lobe.type";
+import type { Lobe, Location, ThyroidalLobes } from "@/types/lobe/lobe.type";
 
 interface LobeContext {
   thyroidalLobes: ThyroidalLobes;
   updateLobe: <K extends keyof Lobe>(
-    id: LobeId,
+    location: Location,
     field: K,
     value: Lobe[K]
   ) => void;
@@ -16,14 +16,17 @@ interface LobeContext {
 
 export const LobeContext = createContext({} as LobeContext);
 
-const getDefaultLobe = (id: LobeId): Lobe => ({
-  id,
-  ap: "20",
-  cc: "20",
-  t: "20",
-  isAbsent: false,
-  isDefault: true,
-});
+const getDefaultLobe = (location: Location): Lobe => {
+  const isIsthmus = location === "isthmus";
+  return {
+    location,
+    ap: isIsthmus ? "2" : "20",
+    t: isIsthmus ? undefined : "20",
+    cc: isIsthmus ? undefined : "40",
+    isAbsent: false,
+    isDefault: true,
+  };
+};
 
 const initialThyroidalLobes: ThyroidalLobes = {
   lobes: [
@@ -42,21 +45,21 @@ export const LobeProvider = ({ children }: PropsWithChildren) => {
   );
 
   const updateLobe = <K extends keyof Lobe>(
-    id: LobeId,
+    location: Location,
     field: K,
     value: Lobe[K]
   ) => {
     setThyroidalLobes((prev) => {
       const updatedLobes = prev.lobes.map((lobe) => {
-        if (lobe.id !== id) return lobe;
+        if (lobe.location !== location) return lobe;
 
         const updatedLobe = { ...lobe, [field]: value };
-
-        // Logic: If isDefault becomes true, set dimensions to 20
+        //* Actualizando los valores por defecto
         if (field === "isDefault" && value === true) {
-          updatedLobe.ap = "20";
-          updatedLobe.cc = "20";
-          updatedLobe.t = "20";
+          const isIsthmus = location === "isthmus";
+          updatedLobe.ap = isIsthmus ? "2" : "20";
+          updatedLobe.t = isIsthmus ? undefined : "20";
+          updatedLobe.cc = isIsthmus ? undefined : "40";
         }
 
         return updatedLobe;

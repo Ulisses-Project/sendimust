@@ -91,16 +91,16 @@ export const LobeTable = () => {
 
           <TableBody>
             {thyroidalLobes.lobes.map((lobe) => (
-              <TableRow key={lobe.id}>
+              <TableRow key={lobe.location}>
                 <TableCell className="font-medium w-[200px]">
-                  {t(`lobe.id.${lobe.id}`)}
+                  {t(`lobe.id.${lobe.location}`)}
                 </TableCell>
                 <TableCell className="w-[100px]">
                   <div className="flex items-center justify-center">
                     <Switch
                       checked={lobe.isAbsent}
                       onCheckedChange={(value) =>
-                        updateLobe(lobe.id, "isAbsent", value)
+                        updateLobe(lobe.location, "isAbsent", value)
                       }
                     />
                   </div>
@@ -112,27 +112,37 @@ export const LobeTable = () => {
                         <Checkbox
                           checked={lobe.isDefault}
                           onCheckedChange={(value) =>
-                            updateLobe(lobe.id, "isDefault", !!value)
+                            updateLobe(lobe.location, "isDefault", !!value)
                           }
                         />
                       </div>
                     </TableCell>
-                    {dimensions.map((dimension) => (
-                      <TableCell key={dimension.id} className="w-[100px]">
-                        <div className="flex items-center justify-center">
-                          <CustomInput
-                            value={lobe[dimension.id]}
-                            onChange={(value) =>
-                              updateLobe(lobe.id, dimension.id, value)
-                            }
-                            withoutArrow
-                            className="w-20 text-center"
-                            placeholder="0"
-                            disabled={lobe.isDefault}
-                          />
-                        </div>
-                      </TableCell>
-                    ))}
+                    {dimensions.map((dimension) => {
+                      // Hide T and CC for Isthmus
+                      if (
+                        lobe.location === "isthmus" &&
+                        (dimension.id === "t" || dimension.id === "cc")
+                      ) {
+                        return <TableCell key={dimension.id} />;
+                      }
+
+                      return (
+                        <TableCell key={dimension.id} className="w-[100px]">
+                          <div className="flex items-center justify-center">
+                            <CustomInput
+                              value={lobe[dimension.id] || ""}
+                              onChange={(value) =>
+                                updateLobe(lobe.location, dimension.id, value)
+                              }
+                              withoutArrow
+                              className="w-20 text-center"
+                              placeholder="0"
+                              disabled={lobe.isDefault}
+                            />
+                          </div>
+                        </TableCell>
+                      );
+                    })}
                   </>
                 )}
               </TableRow>

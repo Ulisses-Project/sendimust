@@ -48,7 +48,7 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
     getDefaultNodule(2),
   ]);
 
-  // Initialize maxId based on initial nodules
+  //* Initialize maxId based on initial nodules
   const [maxId, setMaxId] = useState(nodules.length);
 
   const updateNoduleField = <K extends keyof Nodule>(
@@ -62,7 +62,7 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
 
         const updatedNodule = { ...nodule, [field]: value };
 
-        // Auto-calculate ratios if dimensions change
+        //* Auto-calculate ratios if dimensions change
         if (field === "ap" || field === "cc" || field === "t") {
           const { isTallerThanWide, isTallerThanLong } = calculateNoduleRatios(
             updatedNodule.ap,
@@ -89,19 +89,16 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
 
   const removeNodule = (id: number, type: "delete" | "biopsy") => {
     //* Prevent deleting the last nodule
-    if (nodules.length <= 1 && type === "delete") {
+    if (nodules.length <= 1) {
       return;
     }
 
     const currentIndex = nodules.findIndex((n) => n.id === id);
     const updatedNodules = nodules.filter((n) => n.id !== id);
 
-    //* Switch to the nearest nodule if current nodule is deleted
-    if (id === currentNoduleId && updatedNodules.length > 0) {
-      //* If the deleted nodule is the current one, switch to the nearest nodule
-      const newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
-      setCurrentNoduleId(updatedNodules[newIndex].id);
-    }
+    //* If the deleted nodule is the current one, switch to the nearest nodule
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+    setCurrentNoduleId(updatedNodules[newIndex].id);
 
     //* Update maxId if deleting the last nodule
     if (type === "delete" && id === maxId) {

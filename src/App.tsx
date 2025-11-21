@@ -10,6 +10,7 @@ import { NoduleTable } from "./components/nodule/NoduleTable";
 import { NoduleProvider } from "./context/NoduleContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import { LobeProvider } from "./context/LobeContext";
+import { LymphNodeProvider } from "./context/LymphNodeContext";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 
 function AppContent() {
@@ -58,7 +59,9 @@ function App() {
       <LanguageProvider>
         <NoduleProvider>
           <LobeProvider>
-            <AppContent />
+            <LymphNodeProvider>
+              <AppContent />
+            </LymphNodeProvider>
           </LobeProvider>
         </NoduleProvider>
       </LanguageProvider>

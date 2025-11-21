@@ -19,33 +19,36 @@ import {
   SortableItem,
   SortableItemHandle,
 } from "@/components/ui/sortable";
-import { useLymphNodes } from "@/hooks/lobe/useLymphNode";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { LymphNodeContext } from "@/context/LymphNodeContext";
+import { useDimensions } from "@/context/DimensionsContext";
+import { lymph as lymphEs } from "@/i18n/es/lymph";
+import type { UltrasoundAppearance } from "@/types/lymph/lymph.type";
 
-const ultrasoundAppearances: Option[] = [
-  { value: "normal", label: "Normal" },
-  { value: "indeterminate", label: "Indeterminado" },
-  { value: "suspicious", label: "Sospechoso" },
-];
+const ultrasoundAppearances: Option[] = Object.entries(
+  lymphEs.ultrasoundAppearance
+).map(([key, label]) => ({
+  value: key,
+  label,
+}));
 
 export const LymphNodeTable = () => {
   const {
-    nodes,
-    dimensions,
-    addNode,
-    removeNode,
-    updateNode,
-    resetNodes,
-    setDimensions,
-  } = useLymphNodes();
+    lymphNodes,
+    addLymphNode,
+    removeLymphNode,
+    updateLymphNode,
+    resetLymphNodes,
+  } = useContext(LymphNodeContext);
+
+  const { dimensions, setDimensions } = useDimensions();
 
   const [isRotating, setIsRotating] = useState(false);
 
   const handleReset = async () => {
     setIsRotating(true);
 
-    // Llamar a tu función resetNodes aquí
-    await resetNodes();
+    resetLymphNodes();
 
     // La animación durará 1s, luego se detiene
     setTimeout(() => setIsRotating(false), 1000);
@@ -103,17 +106,21 @@ export const LymphNodeTable = () => {
             </TableHeader>
 
             <TableBody>
-              {nodes.map((node, index) => (
-                <TableRow key={node.id}>
+              {lymphNodes.map((lymphNode, index) => (
+                <TableRow key={lymphNode.id}>
                   <TableCell className="w-[250px]">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">#{index + 1}</span>
                       <Input
                         placeholder="Compartimento"
                         className="flex-1"
-                        value={node.compartimento}
+                        value={lymphNode.compartment}
                         onChange={(e) =>
-                          updateNode(node.id, "compartimento", e.target.value)
+                          updateLymphNode(
+                            lymphNode.id,
+                            "compartment",
+                            e.target.value
+                          )
                         }
                       />
                     </div>
@@ -126,9 +133,15 @@ export const LymphNodeTable = () => {
                           type="number"
                           placeholder="0"
                           className="w-20 text-center"
-                          value={node[dimension.id]}
+                          // @ts-ignore
+                          value={lymphNode[dimension.id]}
                           onChange={(e) =>
-                            updateNode(node.id, dimension.id, e.target.value)
+                            // @ts-ignore
+                            updateLymphNode(
+                              lymphNode.id,
+                              dimension.id,
+                              e.target.value
+                            )
                           }
                         />
                       </div>
@@ -137,10 +150,14 @@ export const LymphNodeTable = () => {
                   <TableCell className="w-[180px]">
                     <div className="flex items-center justify-center">
                       <CustomSelect
-                        defaultValue="normal"
+                        value={lymphNode.ultrasoundAppearance}
                         options={ultrasoundAppearances}
                         onChange={(value) =>
-                          updateNode(node.id, "aspecto", value)
+                          updateLymphNode(
+                            lymphNode.id,
+                            "ultrasoundAppearance",
+                            value as UltrasoundAppearance
+                          )
                         }
                       />
                     </div>
@@ -149,9 +166,13 @@ export const LymphNodeTable = () => {
                     <Input
                       placeholder="Observaciones"
                       className="min-w-48"
-                      value={node.observaciones}
+                      value={lymphNode.observations}
                       onChange={(e) =>
-                        updateNode(node.id, "observaciones", e.target.value)
+                        updateLymphNode(
+                          lymphNode.id,
+                          "observations",
+                          e.target.value
+                        )
                       }
                     />
                   </TableCell>
@@ -160,8 +181,8 @@ export const LymphNodeTable = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => removeNode(node.id)}
-                        disabled={nodes.length === 1}
+                        onClick={() => removeLymphNode(lymphNode.id)}
+                        disabled={lymphNodes.length === 1}
                         className="text-muted-foreground hover:text-primary hover:bg-transparent"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -186,7 +207,7 @@ export const LymphNodeTable = () => {
           />
           Resetear
         </Button>
-        <Button onClick={addNode} variant="outline" className="gap-2">
+        <Button onClick={addLymphNode} variant="outline" className="gap-2">
           <Plus className="h-4 w-4" />
           Añadir fila
         </Button>
