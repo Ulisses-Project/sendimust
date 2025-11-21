@@ -198,7 +198,7 @@ export const NoduleStickyBar = ({
               size="sm"
               onClick={() => handlePreviousNodule(currentNoduleIndex)}
               disabled={currentNoduleIndex === 0}
-              title="Nódulo anterior (Ctrl + ←)"
+              title="Nódulo anterior (Alt + ←)"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -207,7 +207,7 @@ export const NoduleStickyBar = ({
               size="sm"
               onClick={() => handleNextNodule(currentNoduleIndex)}
               disabled={currentNoduleIndex === nodules.length - 1}
-              title="Nódulo siguiente (Ctrl + →)"
+              title="Nódulo siguiente (Alt + →)"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

@@ -9,16 +9,10 @@ import { Button } from "../ui/button";
 import { HelpCircle, Keyboard, Settings } from "lucide-react";
 import { use } from "react";
 import { LanguageContext } from "@/context/LanguageContext";
+import { isMac } from "@/hooks/useKeyboardShortcuts";
 
 export const CustomHeader = () => {
   const { languageConfig, languageOptions, setLanguage } = use(LanguageContext);
-
-  const isMac = () => {
-    return (
-      typeof window !== "undefined" &&
-      navigator.platform.toUpperCase().indexOf("MAC") >= 0
-    );
-  };
 
   return (
     <header className="border-b border-border bg-card">
@@ -83,7 +77,7 @@ export const CustomHeader = () => {
                       Nódulo anterior
                     </span>
                     <kbd className="rounded bg-muted px-2 py-1 text-xs font-mono">
-                      {isMac() ? "⌘" : "Ctrl"} + ←
+                      {isMac() ? "⌥" : "Alt"} + ←
                     </kbd>
                   </div>
                   <div className="flex items-center justify-between">
@@ -91,13 +85,13 @@ export const CustomHeader = () => {
                       Nódulo siguiente
                     </span>
                     <kbd className="rounded bg-muted px-2 py-1 text-xs font-mono">
-                      {isMac() ? "⌘" : "Ctrl"} + →
+                      {isMac() ? "⌥" : "Alt"} + →
                     </kbd>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Nuevo nódulo</span>
                     <kbd className="rounded bg-muted px-2 py-1 text-xs font-mono">
-                      Ctrl + N
+                      {isMac() ? "⌥" : "Alt"} + N
                     </kbd>
                   </div>
                   <div className="flex items-center justify-between">
@@ -105,7 +99,7 @@ export const CustomHeader = () => {
                       Eliminar nódulo
                     </span>
                     <kbd className="rounded bg-muted px-2 py-1 text-xs font-mono">
-                      Ctrl + ⌫
+                      {isMac() ? "⌥" : "Alt"} + ⌫
                     </kbd>
                   </div>
                 </div>

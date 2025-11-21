@@ -44,7 +44,7 @@ export const NoduleColumn = () => {
   };
 
   return (
-    <div className="flex-1 overflow-auto p-6">
+    <div className="p-6">
       <div className="mx-auto max-w-6xl space-y-6">
         <Card>
           <CardContent className="space-y-6">

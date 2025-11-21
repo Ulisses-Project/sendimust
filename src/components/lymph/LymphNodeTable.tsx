@@ -182,7 +182,7 @@ export const LymphNodeTable = () => {
                     </TableCell>
                   ))}
                   <TableCell className="w-[280px]">
-                    <div className="flex flex-col items-center justify-center gap-2 w-full min-h-[80px]">
+                    <div className="flex flex-col items-center justify-center gap-2 w-full min-h-20">
                       <div className="flex items-center gap-2">
                         <Switch
                           checked={lymphNode.isSuspicious}

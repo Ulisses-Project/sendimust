@@ -3,7 +3,7 @@ import { NoduleContext } from "@/context/NoduleContext";
 
 /**
  * Hook personalizado para manejar atajos de teclado globales
- * Detecta automáticamente si el usuario está en Mac (Cmd) o Windows/Linux (Ctrl)
+ * Usa Alt (Option en Mac) para evitar conflictos con el navegador
  */
 export const useKeyboardShortcuts = () => {
   const {
@@ -16,20 +16,21 @@ export const useKeyboardShortcuts = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const isCmdOrCtrl = event.metaKey || event.ctrlKey;
+      const isAlt = event.altKey;
 
-      // Crear nuevo nódulo: Permitir tanto Alt + N como Cmd/Ctrl + N
-      if (isCmdOrCtrl && (event.key === "n" || event.key === "N")) {
+      // Crear nuevo nódulo: Alt + N
+      // Usamos event.code "KeyN" porque en Mac Option+N genera caracteres especiales (˜)
+      if (isAlt && event.code === "KeyN") {
         event.preventDefault();
         addNodule();
         return;
       }
 
-      // Solo continuar si se presiona Cmd/Ctrl para navegación
-      if (!isCmdOrCtrl) return;
+      // Solo continuar si se presiona Alt para navegación
+      if (!isAlt) return;
 
-      // Cmd/Ctrl + Left Arrow: Nódulo anterior
-      if (event.key === "ArrowLeft") {
+      // Alt + Left Arrow: Nódulo anterior
+      if (event.code === "ArrowLeft") {
         event.preventDefault();
         const currentIndex = nodules.findIndex((n) => n.id === currentNoduleId);
         if (currentIndex > 0) {
@@ -38,8 +39,8 @@ export const useKeyboardShortcuts = () => {
         return;
       }
 
-      // Cmd/Ctrl + Right Arrow: Nódulo siguiente
-      if (event.key === "ArrowRight") {
+      // Alt + Right Arrow: Nódulo siguiente
+      if (event.code === "ArrowRight") {
         event.preventDefault();
         const currentIndex = nodules.findIndex((n) => n.id === currentNoduleId);
         if (currentIndex < nodules.length - 1) {
@@ -48,8 +49,8 @@ export const useKeyboardShortcuts = () => {
         return;
       }
 
-      // Cmd/Ctrl + Backspace/Delete: Eliminar nódulo actual
-      if (event.key === "Backspace" || event.key === "Delete") {
+      // Alt + Backspace/Delete: Eliminar nódulo actual
+      if (event.code === "Backspace" || event.code === "Delete") {
         event.preventDefault();
         if (nodules.length > 1) {
           removeNodule(currentNoduleId, "delete");
@@ -64,4 +65,11 @@ export const useKeyboardShortcuts = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [nodules, currentNoduleId, setCurrentNoduleId, addNodule]);
+};
+
+export const isMac = () => {
+  return (
+    typeof window !== "undefined" &&
+    navigator.platform.toUpperCase().indexOf("MAC") >= 0
+  );
 };

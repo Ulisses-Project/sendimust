@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { NoduleContext } from "@/context/NoduleContext";
 import { use } from "react";
 import { NoduleStickyBar } from "@/components/nodule/NoduleStickyBar";
+import { isMac } from "@/hooks/useKeyboardShortcuts";
 
 export const NoduleTable = () => {
   const { nodules, currentNoduleId, setCurrentNoduleId, addNodule } =
@@ -25,7 +26,7 @@ export const NoduleTable = () => {
   };
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex flex-col">
       <NoduleStickyBar
         handleNextNodule={goToNextNodule}
         handlePreviousNodule={goToPreviousNodule}
@@ -43,7 +44,7 @@ export const NoduleTable = () => {
         <Plus className="mr-2 h-4 w-4" />
         Añadir nuevo nódulo
         <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-          <span className="text-xs">Ctrl+N</span>
+          <span className="text-xs">{isMac() ? "⌥" : "Alt"} + N</span>
         </kbd>
       </Button>
     </div>
