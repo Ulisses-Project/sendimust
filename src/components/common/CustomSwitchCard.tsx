@@ -6,6 +6,7 @@ interface CustomSwitchCardProps {
   id: string;
   checked: boolean;
   children: React.ReactNode;
+  className?: string;
   handleCheckedChange: (checked: boolean) => void;
 }
 
@@ -15,9 +16,10 @@ export const CustomSwitchCard = ({
   checked,
   handleCheckedChange,
   children,
+  className,
 }: CustomSwitchCardProps) => {
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader className="flex items-center gap-x-4">
         <CardTitle>
           <div className="flex items-center gap-2">

@@ -18,6 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
 
 interface NoduleStickyBarProps {
   handlePreviousNodule: (currentNoduleIndex: number) => void;
@@ -60,25 +61,30 @@ export const NoduleStickyBar = ({
 
   return (
     <div
-      className="sticky top-0 z-10 border-b bg-linear-to-r from-primary/5 via-primary/10 to-primary/5 backdrop-blur-sm shadow-sm"
+      className="sticky top-0 z-20 border-b bg-background/60 backdrop-blur-xl border-border/40 shadow-sm transition-all duration-200"
       data-tour="nodule-header"
     >
-      <div className="px-6 py-3">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 overflow-x-auto no-scrollbar">
-            <Badge className="text-base px-3 py-1.5 font-semibold shrink-0">
+      <div className="px-4 py-3 md:px-6">
+        <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
+          <div className="flex items-center gap-3 md:gap-6 overflow-x-auto no-scrollbar py-1">
+            <Badge
+              variant="secondary"
+              className="text-sm px-3 py-1 font-semibold shrink-0 bg-primary/10 text-primary hover:bg-primary/15 border-transparent transition-colors"
+            >
               Nódulo {currentNoduleId}
             </Badge>
 
-            <div className="flex items-center gap-4 text-sm whitespace-nowrap">
+            <div className="flex items-center gap-4 md:gap-6 text-sm whitespace-nowrap">
               {/* Lobe - Always visible as it has a default and is primary */}
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary" />
-                <div className="flex flex-col leading-none">
-                  <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+              <div className="flex items-center gap-2.5 group">
+                <div className="p-1.5 rounded-full bg-muted/50 group-hover:bg-muted transition-colors">
+                  <MapPin className="h-3.5 w-3.5 text-primary/80" />
+                </div>
+                <div className="flex flex-col leading-none gap-0.5">
+                  <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                     Lóbulo
                   </span>
-                  <span className="font-medium">
+                  <span className="font-medium text-foreground/90">
                     {t(`nodule.lobe.${currentNodule.lobe}`)}
                   </span>
                 </div>
@@ -86,12 +92,12 @@ export const NoduleStickyBar = ({
 
               {hasLocation && (
                 <>
-                  <div className="h-8 w-px bg-border/60" />
-                  <div className="flex flex-col leading-none">
-                    <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                  <div className="h-6 w-px bg-border/40" />
+                  <div className="flex flex-col leading-none gap-0.5">
+                    <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                       Localización
                     </span>
-                    <span className="font-medium">
+                    <span className="font-medium text-foreground/90">
                       {currentNodule.location
                         .map((loc) => t(`nodule.location.${loc}`))
                         .join(", ")}
@@ -102,14 +108,18 @@ export const NoduleStickyBar = ({
 
               {hasDimensions && (
                 <>
-                  <div className="h-8 w-px bg-border/60" />
-                  <div className="flex items-center gap-2">
-                    <Ruler className="h-4 w-4 text-primary" />
-                    <div className="flex flex-col leading-none">
-                      <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                  <div className="h-6 w-px bg-border/40" />
+                  <div className="flex items-center gap-2.5 group">
+                    <div className="p-1.5 rounded-full bg-muted/50 group-hover:bg-muted transition-colors">
+                      <Ruler className="h-3.5 w-3.5 text-primary/80" />
+                    </div>
+                    <div className="flex flex-col leading-none gap-0.5">
+                      <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                         Medidas (mm)
                       </span>
-                      <span className="font-medium">{formattedDimensions}</span>
+                      <span className="font-medium text-foreground/90">
+                        {formattedDimensions}
+                      </span>
                     </div>
                   </div>
                 </>
@@ -117,37 +127,46 @@ export const NoduleStickyBar = ({
 
               {hasComposition && (
                 <>
-                  <div className="h-8 w-px bg-border/60" />
-                  <div className="flex flex-col leading-none">
-                    <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                  <div className="h-6 w-px bg-border/40" />
+                  <div className="flex flex-col leading-none gap-0.5">
+                    <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                       Composición
                     </span>
-                    <span className="font-medium">
+                    <span className="font-medium text-foreground/90">
                       {t(`nodule.composition.${currentNodule.composition}`)}
                     </span>
                   </div>
                 </>
               )}
 
-              <div className="h-8 w-px bg-border/60" />
+              <div className="h-6 w-px bg-border/40" />
 
               {/* TI-RADS */}
-              <div className="flex items-center gap-2">
-                <span className="font-medium">TI-RADS:</span>
+              <div className="flex items-center gap-2.5">
+                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+                  TI-RADS
+                </span>
                 <Badge
-                  className="text-white border-0"
-                  style={{
-                    backgroundColor: getTiRadsColor(currentNodule.tiRads),
-                  }}
+                  className={cn(
+                    "text-white border-0 px-2.5 py-0.5 text-xs font-bold shadow-sm transition-transform hover:scale-105",
+                    !currentNodule.tiRads && "bg-muted text-muted-foreground"
+                  )}
+                  style={
+                    currentNodule.tiRads
+                      ? {
+                          backgroundColor: getTiRadsColor(currentNodule.tiRads),
+                        }
+                      : undefined
+                  }
                 >
-                  {currentNodule.tiRads}
+                  {currentNodule.tiRads || "-"}
                 </Badge>
               </div>
             </div>
           </div>
 
           <div
-            className="flex items-center gap-2 shrink-0"
+            className="flex items-center gap-1 shrink-0 pl-2 border-l border-border/40"
             data-tour="nodule-navigation"
           >
             <AlertDialog
@@ -158,7 +177,7 @@ export const NoduleStickyBar = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors mr-1"
                   disabled={nodules.length <= 1}
                   title="Eliminar nódulo"
                 >
@@ -191,26 +210,28 @@ export const NoduleStickyBar = ({
               </AlertDialogContent>
             </AlertDialog>
 
-            <div className="h-8 w-px bg-border/60 mx-1" />
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePreviousNodule(currentNoduleIndex)}
-              disabled={currentNoduleIndex === 0}
-              title="Nódulo anterior (Alt + ←)"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleNextNodule(currentNoduleIndex)}
-              disabled={currentNoduleIndex === nodules.length - 1}
-              title="Nódulo siguiente (Alt + →)"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center bg-muted/30 rounded-md p-0.5 border border-border/30">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0 hover:bg-background hover:shadow-sm transition-all"
+                onClick={() => handlePreviousNodule(currentNoduleIndex)}
+                disabled={currentNoduleIndex === 0}
+                title="Nódulo anterior (Alt + ←)"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0 hover:bg-background hover:shadow-sm transition-all"
+                onClick={() => handleNextNodule(currentNoduleIndex)}
+                disabled={currentNoduleIndex === nodules.length - 1}
+                title="Nódulo siguiente (Alt + →)"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

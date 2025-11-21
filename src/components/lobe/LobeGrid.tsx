@@ -16,7 +16,7 @@ export const LobeGrid = () => {
   const { thyroidalLobes, updateGlobalField } = use(LobeContext);
 
   return (
-    <Card data-tour="lobulos-table">
+    <Card data-tour="lobulos-table" className="mt-6">
       <CardHeader>
         <div className="flex items-center gap-2">
           <div className="h-8 w-1 bg-primary rounded-full" />

@@ -23,7 +23,7 @@ function AppContent() {
   return (
     <div className="flex h-screen flex-col">
       <CustomHeader />
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p">
         <div className="mx-auto max-w-7xl space-y-6">
           <LobeGrid />
 
@@ -39,6 +39,7 @@ function AppContent() {
 
           {/*Nodules */}
           <CustomSwitchCard
+            className="mb-6"
             title="Nódulos tiroideos reseñables"
             id="Nodule"
             checked={showNodule}
