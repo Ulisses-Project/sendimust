@@ -13,6 +13,7 @@ interface LymphNodeContext {
   addLymphNode: () => void;
   removeLymphNode: (id: number) => void;
   resetLymphNodes: () => void;
+  resetLymphNode: (id: number) => void;
 }
 
 export const LymphNodeContext = createContext({} as LymphNodeContext);
@@ -20,12 +21,17 @@ export const LymphNodeContext = createContext({} as LymphNodeContext);
 const getDefaultLymphNode = (id: number): LymphNode => {
   return {
     id: id,
-    compartment: "",
+    laterality: "right",
+    compartment: "I",
     ap: "",
     t: "",
     cc: "",
-    ultrasoundAppearance: "normal",
+    isSuspicious: false,
+    suspiciousFeatures: [],
+    hasFattyHilum: false,
+    centralVascularity: "normal",
     observations: "",
+    ultrasoundAppearance: "normal",
   };
 };
 
@@ -81,6 +87,15 @@ export const LymphNodeProvider = ({ children }: PropsWithChildren) => {
     setCurrentLymphNodeId(1);
   };
 
+  const resetLymphNode = (id: number) => {
+    setLymphNodes((prev) =>
+      prev.map((node) => {
+        if (node.id !== id) return node;
+        return getDefaultLymphNode(id);
+      })
+    );
+  };
+
   return (
     <LymphNodeContext
       value={{
@@ -91,6 +106,7 @@ export const LymphNodeProvider = ({ children }: PropsWithChildren) => {
         addLymphNode,
         removeLymphNode,
         resetLymphNodes,
+        resetLymphNode,
       }}
     >
       {children}

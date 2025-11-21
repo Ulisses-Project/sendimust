@@ -1,12 +1,8 @@
 import en from "@/i18n/en";
-import nodule from "./es/nodule";
-import { lobe } from "./es/lobe";
+import es from "@/i18n/es";
 
 export const translations = {
-  es: {
-    nodule,
-    lobe,
-  },
+  es,
   en,
 };
 export type Language = keyof typeof translations;
