@@ -4,7 +4,7 @@ import { CustomSelect } from "../common/CustomSelect";
 import { Textarea } from "../ui/textarea";
 import { use } from "react";
 import { LanguageContext } from "@/context/LanguageContext";
-import { noduleLanguageMapper } from "@/lib/utils";
+import { optionsMapper } from "@/lib/utils";
 import { LobeContext } from "@/context/LobeContext";
 import type {
   GlobalEchogenicity,
@@ -45,7 +45,7 @@ export const LobeGrid = () => {
             <CardContent>
               <CustomSelect
                 value={thyroidalLobes.globalEchogenicity}
-                options={noduleLanguageMapper(getDict("lobe.echogenicity"))}
+                options={optionsMapper(getDict("lobe.echogenicity"))}
                 onChange={(value) =>
                   updateGlobalField(
                     "globalEchogenicity",
@@ -63,7 +63,7 @@ export const LobeGrid = () => {
             <CardContent>
               <CustomSelect
                 value={thyroidalLobes.globalVascularity}
-                options={noduleLanguageMapper(getDict("lobe.vascularity"))}
+                options={optionsMapper(getDict("lobe.vascularity"))}
                 onChange={(value) =>
                   updateGlobalField(
                     "globalVascularity",

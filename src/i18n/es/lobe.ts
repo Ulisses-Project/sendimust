@@ -17,3 +17,5 @@ export const lobe: LobeTranslation = {
     increased: "Aumentada",
   },
 };
+
+export default lobe;

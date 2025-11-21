@@ -16,6 +16,7 @@ export interface Nodule {
   vascularityType: VascularityType;
   isTallerThanWide: string;
   isTallerThanLong: string;
+  tiRads: TiRads;
   categories: string[];
   observations: string;
 }
@@ -37,6 +38,7 @@ export interface NoduleTranslation {
   vascularityType: Record<VascularityType, string>;
   isTallerThanWide: Record<string, string>;
   isTallerThanLong: Record<string, string>;
+  tiRads: Record<TiRads, string>;
 }
 
 export type Lobe =
@@ -106,3 +108,5 @@ export type Vascularity =
   | "nonVascularized";
 
 export type VascularityType = "low" | "moderate" | "high";
+
+export type TiRads = "TR1" | "TR2" | "TR3" | "TR4" | "TR5";

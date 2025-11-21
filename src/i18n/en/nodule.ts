@@ -86,6 +86,13 @@ const nodule: NoduleTranslation = {
     yes: "Yes",
     no: "No",
   },
+  tiRads: {
+    TR1: "TR1 - Benign",
+    TR2: "TR2 - Not suspicious",
+    TR3: "TR3 - Mildly suspicious",
+    TR4: "TR4 - Moderately suspicious",
+    TR5: "TR5 - Highly suspicious",
+  },
 };
 
 export default nodule;

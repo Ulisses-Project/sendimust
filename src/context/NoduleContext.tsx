@@ -1,6 +1,7 @@
 import type { Nodule } from "@/types/nodule/nodule.type";
 import { createContext, useState, type PropsWithChildren } from "react";
 import { calculateNoduleRatios } from "@/lib/helpers/nodule";
+import { calculateTiRads } from "@/lib/helpers/tirads";
 
 interface NoduleContext {
   currentNoduleId: number;
@@ -36,6 +37,7 @@ const getDefaultNodule = (id: number): Nodule => {
     vascularityType: "low",
     isTallerThanWide: "no",
     isTallerThanLong: "no",
+    tiRads: "TR1",
     categories: [],
     observations: "",
   };
@@ -60,7 +62,22 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
       prev.map((nodule) => {
         if (nodule.id !== id) return nodule;
 
-        const updatedNodule = { ...nodule, [field]: value };
+        let updatedNodule = { ...nodule, [field]: value };
+
+        //* If composition changes to simpleCyst, reset other fields to defaults
+        if (field === "composition" && value === "simpleCyst") {
+          updatedNodule = {
+            ...updatedNodule,
+            echogenicity: "cannotBeAssessed",
+            margin: "cannotBeAssessed",
+            isExtrathyroidalExtension: "no",
+            extrathyroidalExtensionLocation: [],
+            isCalcification: "no",
+            calcificationType: [],
+            vascularity: "notEvaluated",
+            vascularityType: "low",
+          };
+        }
 
         //* Auto-calculate ratios if dimensions change
         if (field === "ap" || field === "cc" || field === "t") {
@@ -72,6 +89,22 @@ export const NoduleProvider = ({ children }: PropsWithChildren) => {
 
           updatedNodule.isTallerThanWide = isTallerThanWide;
           updatedNodule.isTallerThanLong = isTallerThanLong;
+        }
+
+        //* Auto-calculate TI-RADS when relevant fields change
+        if (
+          field === "composition" ||
+          field === "echogenicity" ||
+          field === "margin" ||
+          field === "isExtrathyroidalExtension" ||
+          field === "isCalcification" ||
+          field === "calcificationType" ||
+          field === "isTallerThanWide" ||
+          field === "ap" ||
+          field === "cc" ||
+          field === "t"
+        ) {
+          updatedNodule.tiRads = calculateTiRads(updatedNodule);
         }
 
         return updatedNodule;

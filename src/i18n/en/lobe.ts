@@ -1,6 +1,6 @@
 import type { LobeTranslation } from "@/types/lobe/lobe.type";
 
-export const lobe: LobeTranslation = {
+const lobe: LobeTranslation = {
   id: {
     right: "Right Lobe",
     left: "Left Lobe",
@@ -17,3 +17,5 @@ export const lobe: LobeTranslation = {
     increased: "Increased",
   },
 };
+
+export default lobe;

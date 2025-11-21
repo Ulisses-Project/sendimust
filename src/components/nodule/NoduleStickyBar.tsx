@@ -6,6 +6,7 @@ import { NoduleContext } from "@/context/NoduleContext";
 import type { Nodule } from "@/types/nodule/nodule.type";
 import { useDimensions } from "@/context/DimensionsContext";
 import { LanguageContext } from "@/context/LanguageContext";
+import { getTiRadsColor } from "@/lib/helpers/tirads";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -133,7 +134,14 @@ export const NoduleStickyBar = ({
               {/* TI-RADS */}
               <div className="flex items-center gap-2">
                 <span className="font-medium">TI-RADS:</span>
-                <Badge className="bg-amber-500 hover:bg-amber-600">TR1</Badge>
+                <Badge
+                  className="text-white border-0"
+                  style={{
+                    backgroundColor: getTiRadsColor(currentNodule.tiRads),
+                  }}
+                >
+                  {currentNodule.tiRads}
+                </Badge>
               </div>
             </div>
           </div>

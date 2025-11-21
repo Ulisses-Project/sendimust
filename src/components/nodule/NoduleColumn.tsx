@@ -16,7 +16,7 @@ import type {
 } from "@/types/nodule/nodule.type";
 import { CustomSelect } from "@/components/common/CustomSelect";
 import { LanguageContext } from "@/context/LanguageContext";
-import { noduleLanguageMapper } from "@/lib/utils";
+import { optionsMapper } from "@/lib/utils";
 import { CustomCheckboxGrid } from "@/components/common/CustomCheckboxGrid";
 import { CustomInput } from "@/components/common/CustomInput";
 import { useDimensions } from "@/context/DimensionsContext";
@@ -26,6 +26,8 @@ import {
   SortableItem,
 } from "@/components/ui/sortable";
 import { Switch } from "@/components/ui/switch";
+import { toggleArrayField as toggleArrayFieldHelper } from "@/lib/helpers/nodule";
+import { getTiRadsColor, getTiRadsBorderColor } from "@/lib/helpers/tirads";
 
 export const NoduleColumn = () => {
   const { getDict, t } = use(LanguageContext);
@@ -36,14 +38,9 @@ export const NoduleColumn = () => {
 
   const currentNodule = nodules.find((n) => n.id === currentNoduleId) as Nodule;
 
-  // Generic helper to toggle values in array fields
+  // Helper wrapper to maintain existing API
   const toggleArrayField = (field: keyof Nodule, value: string) => {
-    const currentValues = (currentNodule[field] as string[]) || [];
-    const updated = currentValues.includes(value)
-      ? currentValues.filter((item) => item !== value)
-      : [...currentValues, value];
-
-    updateNoduleField(currentNoduleId, field, updated as any);
+    toggleArrayFieldHelper(currentNodule, field, value, updateNoduleField);
   };
 
   return (
@@ -63,7 +60,7 @@ export const NoduleColumn = () => {
                 <div className="space-y-2" data-tour="nodule-lobulo">
                   <Label>Lóbulo</Label>
                   <CustomSelect
-                    options={noduleLanguageMapper(getDict("nodule.lobe"))}
+                    options={optionsMapper(getDict("nodule.lobe"))}
                     value={currentNodule.lobe}
                     onChange={(value) =>
                       updateNoduleField(currentNoduleId, "lobe", value as Lobe)
@@ -74,9 +71,7 @@ export const NoduleColumn = () => {
                 <div className="space-y-2" data-tour="nodule-composicion">
                   <Label>Composición</Label>
                   <CustomSelect
-                    options={noduleLanguageMapper(
-                      getDict("nodule.composition")
-                    )}
+                    options={optionsMapper(getDict("nodule.composition"))}
                     value={currentNodule.composition}
                     onChange={(value) =>
                       updateNoduleField(
@@ -93,7 +88,7 @@ export const NoduleColumn = () => {
                 <CustomCheckboxGrid
                   className="grid grid-cols-2 gap-2 sm:grid-cols-4"
                   title="Localización en el lóbulo"
-                  options={noduleLanguageMapper(getDict("nodule.location"))}
+                  options={optionsMapper(getDict("nodule.location"))}
                   currentValues={currentNodule.location}
                   onChange={(value) => toggleArrayField("location", value)}
                 />
@@ -139,174 +134,174 @@ export const NoduleColumn = () => {
               </div>
             </div>
 
-            <div className="space-y-4 pt-4">
-              <div className="flex items-center gap-2 pb-2">
-                <div className="h-8 w-1 bg-secondary rounded-full" />
-                <h3 className="text-lg font-semibold text-secondary">
-                  Características ecográficas
-                </h3>
-              </div>
+            {currentNodule.composition !== "simpleCyst" && (
+              <>
+                <div className="space-y-4 pt-4">
+                  <div className="flex items-center gap-2 pb-2">
+                    <div className="h-8 w-1 bg-secondary rounded-full" />
+                    <h3 className="text-lg font-semibold text-secondary">
+                      Características ecográficas
+                    </h3>
+                  </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label>Ecogenicidad</Label>
-                  <CustomSelect
-                    options={noduleLanguageMapper(
-                      getDict("nodule.echogenicity")
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label>Ecogenicidad</Label>
+                      <CustomSelect
+                        options={optionsMapper(getDict("nodule.echogenicity"))}
+                        value={currentNodule.echogenicity}
+                        onChange={(value) =>
+                          updateNoduleField(
+                            currentNoduleId,
+                            "echogenicity",
+                            value as any
+                          )
+                        }
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Margen</Label>
+                      <CustomSelect
+                        options={optionsMapper(getDict("nodule.margin"))}
+                        value={currentNodule.margin}
+                        onChange={(value) =>
+                          updateNoduleField(
+                            currentNoduleId,
+                            "margin",
+                            value as Margin
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Label className="pr-2">Extensión extratiroidea</Label>
+                      <Switch
+                        checked={
+                          currentNodule.isExtrathyroidalExtension === "yes"
+                        }
+                        onCheckedChange={(value) =>
+                          updateNoduleField(
+                            currentNoduleId,
+                            "isExtrathyroidalExtension",
+                            (value ? "yes" : "no") as isExtrathyroidalExtension
+                          )
+                        }
+                      />
+                      {/* //*Titulo del switch descomentar */}
+                      <span className="text-sm text-muted-foreground">
+                        {t(
+                          `nodule.isExtrathyroidalExtension.${currentNodule.isExtrathyroidalExtension}`
+                        )}
+                      </span>
+                    </div>
+                    {currentNodule.isExtrathyroidalExtension === "yes" && (
+                      <div className="pl-4 space-y-2 border-l-2 border-secondary">
+                        <CustomCheckboxGrid
+                          className="grid grid-cols-2 gap-2 sm:grid-cols-4"
+                          title="Localización de la extensión"
+                          options={optionsMapper(
+                            getDict("nodule.extrathyroidalExtensionLocation")
+                          )}
+                          currentValues={
+                            currentNodule.extrathyroidalExtensionLocation
+                          }
+                          onChange={(value) =>
+                            toggleArrayField(
+                              "extrathyroidalExtensionLocation",
+                              value
+                            )
+                          }
+                        />
+                      </div>
                     )}
-                    value={currentNodule.echogenicity}
-                    onChange={(value) =>
-                      updateNoduleField(
-                        currentNoduleId,
-                        "echogenicity",
-                        value as any
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Margen</Label>
-                  <CustomSelect
-                    options={noduleLanguageMapper(getDict("nodule.margin"))}
-                    value={currentNodule.margin}
-                    onChange={(value) =>
-                      updateNoduleField(
-                        currentNoduleId,
-                        "margin",
-                        value as Margin
-                      )
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Label>Extensión extratiroidea</Label>
-                  <Switch
-                    checked={
-                      currentNodule.isExtrathyroidalExtension ===
-                      t("nodule.isExtrathyroidalExtension.yes")
-                    }
-                    onCheckedChange={(value) =>
-                      updateNoduleField(
-                        currentNoduleId,
-                        "isExtrathyroidalExtension",
-                        (value
-                          ? t("nodule.isExtrathyroidalExtension.yes")
-                          : t(
-                              "nodule.isExtrathyroidalExtension.no"
-                            )) as isExtrathyroidalExtension
-                      )
-                    }
-                  />
-                </div>
-                {currentNodule.isExtrathyroidalExtension ===
-                  t("nodule.isExtrathyroidalExtension.yes") && (
-                  <div className="pl-4 space-y-2 border-l-2 border-secondary">
-                    <CustomCheckboxGrid
-                      className="grid grid-cols-2 gap-2 sm:grid-cols-4"
-                      title="Localización de la extensión"
-                      options={noduleLanguageMapper(
-                        getDict("nodule.extrathyroidalExtensionLocation")
-                      )}
-                      currentValues={
-                        currentNodule.extrathyroidalExtensionLocation
-                      }
-                      onChange={(value) =>
-                        toggleArrayField(
-                          "extrathyroidalExtensionLocation",
-                          value
-                        )
-                      }
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Label>Puntos ecogénicos</Label>
-                  <Switch
-                    checked={
-                      currentNodule.isCalcification ===
-                      (t("nodule.isCalcification.yes") as isCalcification)
-                    }
-                    onCheckedChange={(value) =>
-                      updateNoduleField(
-                        currentNoduleId,
-                        "isCalcification",
-                        (value
-                          ? t("nodule.isCalcification.yes")
-                          : t("nodule.isCalcification.no")) as isCalcification
-                      )
-                    }
-                  />
-                </div>
-                {currentNodule.isCalcification ===
-                  t("nodule.isCalcification.yes") && (
-                  <div className="pl-4 space-y-2 border-l-2 border-secondary">
-                    <CustomCheckboxGrid
-                      className="space-y-2"
-                      title="Tipo de calcificación"
-                      options={noduleLanguageMapper(
-                        getDict("nodule.calcificationType")
-                      )}
-                      currentValues={currentNodule.calcificationType}
-                      onChange={(value) =>
-                        toggleArrayField("calcificationType", value)
-                      }
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-4 pt-4">
-                <div className="flex items-center gap-2 pb-2">
-                  <div className="h-8 w-1 bg-secondary rounded-full" />
-                  <h3 className="text-lg font-semibold text-secondary">
-                    Vascularización
-                  </h3>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>Vascularización</Label>
-                    <CustomSelect
-                      options={noduleLanguageMapper(
-                        getDict("nodule.vascularity")
-                      )}
-                      value={currentNodule.vascularity}
-                      onChange={(value) =>
-                        updateNoduleField(
-                          currentNoduleId,
-                          "vascularity",
-                          value as any
-                        )
-                      }
-                    />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>Tipo de vascularización</Label>
-                    <CustomSelect
-                      options={noduleLanguageMapper(
-                        getDict("nodule.vascularityType")
-                      )}
-                      value={currentNodule.vascularityType}
-                      onChange={(value) =>
-                        updateNoduleField(
-                          currentNoduleId,
-                          "vascularityType",
-                          value as VascularityType
-                        )
-                      }
-                    />
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Label className="pr-2">Puntos ecogénicos</Label>
+                      <Switch
+                        checked={currentNodule.isCalcification === "yes"}
+                        onCheckedChange={(value) =>
+                          updateNoduleField(
+                            currentNoduleId,
+                            "isCalcification",
+                            (value ? "yes" : "no") as isCalcification
+                          )
+                        }
+                      />
+                      {/* //* Titulo del switch descomentar */}
+                      <span className="text-sm text-muted-foreground">
+                        {t(
+                          `nodule.isCalcification.${currentNodule.isCalcification}`
+                        )}
+                      </span>
+                    </div>
+                    {currentNodule.isCalcification === "yes" && (
+                      <div className="pl-4 space-y-2 border-l-2 border-secondary">
+                        <CustomCheckboxGrid
+                          className="space-y-2"
+                          title="Tipo de calcificación"
+                          options={optionsMapper(
+                            getDict("nodule.calcificationType")
+                          )}
+                          currentValues={currentNodule.calcificationType}
+                          onChange={(value) =>
+                            toggleArrayField("calcificationType", value)
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-4 pt-4">
+                    <div className="flex items-center gap-2 pb-2">
+                      <div className="h-8 w-1 bg-secondary rounded-full" />
+                      <h3 className="text-lg font-semibold text-secondary">
+                        Vascularización
+                      </h3>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label>Vascularización</Label>
+                        <CustomSelect
+                          options={optionsMapper(getDict("nodule.vascularity"))}
+                          value={currentNodule.vascularity}
+                          onChange={(value) =>
+                            updateNoduleField(
+                              currentNoduleId,
+                              "vascularity",
+                              value as any
+                            )
+                          }
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Tipo de vascularización</Label>
+                        <CustomSelect
+                          options={optionsMapper(
+                            getDict("nodule.vascularityType")
+                          )}
+                          value={currentNodule.vascularityType}
+                          onChange={(value) =>
+                            updateNoduleField(
+                              currentNoduleId,
+                              "vascularityType",
+                              value as VascularityType
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
 
             <div className="space-y-4 pt-4 -mx-6 px-6 py-4">
               <div className="flex items-center gap-2 pb-2">
@@ -355,8 +350,14 @@ export const NoduleColumn = () => {
                     ACR TI-RADS
                   </Label>
                   <div className="flex flex-col gap-2">
-                    <div className="px-3 py-2 rounded-md border-2 font-bold text-center bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-300">
-                      TR1
+                    <div
+                      className="px-3 py-2 rounded-md border-2 font-bold text-center text-white"
+                      style={{
+                        backgroundColor: getTiRadsColor(currentNodule.tiRads),
+                        borderColor: getTiRadsBorderColor(currentNodule.tiRads),
+                      }}
+                    >
+                      {currentNodule.tiRads}
                     </div>
                   </div>
                 </div>
